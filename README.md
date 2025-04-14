@@ -2,7 +2,8 @@
 
 ## Tech Stack
 - React
-
+- TypeScript
+  
 Imagine having your own personal, unchanging slice of the internet—a digital space where every piece of content you find valuable is stored permanently for you to revisit anytime. MyBedroom is built on this very idea, and here’s a deeper dive into what that means:
 
 ---
