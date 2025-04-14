@@ -59,11 +59,3 @@ Since this is your personal slice of the internet, you remain in complete contro
 
 **Evergreen Digital Legacy:**  
 The true power of MyBedroom lies in its capacity to create an evergreen digital record. Over time, your personal archive will serve as a historical record of your digital life, capturing your evolving interests, ideas, and discoveries in a medium that defies the typical fleeting nature of the internet.
-
----
-
-### Summing It Up
-
-MyBedroom offers more than just a place to save links—it empowers you to construct your own, unchanging internet. It ensures that every interaction, every piece of content, and every discovery you cherish is preserved exactly as you encountered it. This transformation of the web into your own timeless archive changes the way you interact with online content, making every click a step towards building a permanent digital legacy.
-
-Does this capture the essence of what you’re looking to achieve?
