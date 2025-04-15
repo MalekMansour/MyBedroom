@@ -35,18 +35,21 @@ Think of MyBedroom as constructing a private library of the web. Each saved item
 #### 3. Videos
 - **Curated Media Library:**  
   Videos are one of the richest sources of content—tutorials, documentaries, entertainment, and more. MyBedroom lets you capture these videos at the moment you find them, safeguarding the experience against later removal or edits.
+
 - **Personal Playlists and Categories:**  
   Organize videos into playlists or categories so you can relive specific moments, learnings, or entertainment sessions whenever you choose.
 
 #### 4. Audio
 - **A Permanent Soundtrack:**  
   Audio isn’t just for music—think podcasts, interviews, ambient sounds, or unique audio clips that speak to you. Save these auditory elements permanently.
+
 - **Accessible Anytime:**  
   Once captured, these sounds become a lasting part of your auditory library, ensuring that even if the original source changes, your version remains the same.
 
 #### 5. Websites
 - **Comprehensive Web Snapshots:**  
   This is the heart of your personal internet—a dedicated space where complete websites or important web pages are captured as they appear in that moment. Whether it’s an article, a blog post, or an entire site, you’re creating an unalterable record.
+
 - **Enhanced Metadata:**  
   Alongside the snapshot of a website, you can add tags, annotations, and contextual notes that will help you search and understand your collection in the future.
 
