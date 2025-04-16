@@ -21,6 +21,7 @@ Think of MyBedroom as constructing a private library of the web. Each saved item
 ### How Each Section Contributes to Your Personal Internet
 
 ### Keyboard customization
+You may customize your keyboard inputs and colors using MyBedroom Keyboard Function.
 
 
 #### 1. Chat
