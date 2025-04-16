@@ -20,6 +20,9 @@ Think of MyBedroom as constructing a private library of the web. Each saved item
 
 ### How Each Section Contributes to Your Personal Internet
 
+### Keyboard customization
+
+
 #### 1. Chat
 - **Dynamic Conversations Preserved:**  
   The Chat section is more than just real-time messaging—it's an archive of your discussions, ideas, and brainstorming sessions. Save and review conversations long after they happen.
