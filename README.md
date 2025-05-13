@@ -72,3 +72,6 @@ Since this is your personal slice of the internet, you remain in complete contro
 
 **Evergreen Digital Legacy:**  
 The true power of MyBedroom lies in its capacity to create an evergreen digital record. Over time, your personal archive will serve as a historical record of your digital life, capturing your evolving interests, ideas, and discoveries in a medium that defies the typical fleeting nature of the internet.
+
+
+So it's a bit of a mix of discord and mega. You can get up to 20gb of storage and upload images, videos, documents and websites.
