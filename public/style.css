@@ -13,38 +13,64 @@ body {
   color: #f0f0f0;
   display: flex;
   height: 100vh;
+  overflow: hidden;
 }
 
 /* ==========
    Sidebar
    ========== */
 .sidebar {
-  width: 220px;
+  width: 240px;
   background-color: #1a1a1a;
-  padding: 25px 15px;
+  padding: 20px;
   border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar h2 {
   font-size: 1.2rem;
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-align: center;
 }
 
-.sidebar a {
-  display: block;
-  padding: 10px 15px;
-  margin: 10px 0;
-  color: #ccc;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: all 0.2s ease;
+#folderList {
+  list-style: none;
+  flex: 1;
+  overflow-y: auto;
 }
 
-.sidebar a:hover {
+#folderList li {
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#folderList li:hover,
+#folderList li.selected {
   background-color: #333;
   color: #fff;
+}
+
+#addFolderBtn {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #333;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#addFolderBtn:hover {
+  background-color: #444;
 }
 
 /* =================
@@ -52,95 +78,167 @@ body {
    ================= */
 .main {
   flex: 1;
-  padding: 30px;
+  padding: 20px;
   overflow-y: auto;
+  position: relative;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+#folderTitle {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
 }
 
-h2 {
-  margin-top: 30px;
-  font-size: 1.4rem;
-  border-bottom: 1px solid #444;
-  padding-bottom: 5px;
+#linkForm {
+  margin-bottom: 25px;
 }
 
-/* =======
-   Forms
-   ======= */
-input,
-textarea,
-button {
+#linkForm input,
+#linkForm textarea,
+#linkForm button,
+#passwordForm input,
+#passwordForm button {
   width: 100%;
   background: #1e1e1e;
   border: 1px solid #333;
   border-radius: 5px;
   color: #fff;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 8px;
+  margin-bottom: 12px;
   transition: border 0.2s;
 }
 
-input:focus,
-textarea:focus {
+#linkForm input:focus,
+#linkForm textarea:focus,
+#passwordForm input:focus {
   border-color: #555;
   outline: none;
 }
 
-button {
+#linkForm button,
+#passwordForm button {
   background-color: #333;
   cursor: pointer;
   font-weight: bold;
 }
 
-button:hover {
+#linkForm button:hover,
+#passwordForm button:hover {
   background-color: #444;
 }
 
 /* ==================
    Link List Entries
    ================== */
-#linkList {
-  margin-top: 20px;
+#filterContainer {
+  margin-bottom: 15px;
 }
 
-#linkList div {
+#filterContainer select {
+  width: auto;
+  display: inline-block;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #fff;
+  padding: 6px;
+}
+
+#linkList {
+  margin-top: 10px;
+}
+
+#linkList .link-item {
   background-color: #1b1b1b;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   border: 1px solid #333;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-#linkList a {
-  color: #4fc3f7;
+.link-info {
+  flex: 1;
+}
+
+.link-info h3 {
   font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.link-info a {
+  color: #4fc3f7;
   text-decoration: none;
 }
 
-#linkList a:hover {
+.link-info a:hover {
   text-decoration: underline;
 }
 
-/* ====================
-   Delete Button/Icon
-   ==================== */
-.delete-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  cursor: pointer;
-  font-size: 18px;
-  color: #777;
-  transition: color 0.2s ease;
+.link-info p {
+  font-size: 0.9rem;
+  margin-top: 4px;
+  color: #bbb;
+  word-break: break-all;
 }
 
-.delete-btn:hover {
-  color: red;
+/* Colored stripe on the right side */
+.link-color-stripe {
+  width: 12px;
+  height: 100%;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* ====================
+   Three‐Dots Menu Icon
+   ==================== */
+.menu-icon {
+  font-size: 18px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px 6px;
+  margin-left: 12px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.menu-icon:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* ========================
+   Context Menu (options)
+   ======================== */
+.context-menu {
+  position: absolute;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+  width: 180px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.context-menu li {
+  padding: 8px 12px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.context-menu li:hover {
+  background-color: #333;
+  color: #fff;
 }
 
 /* =========================
@@ -152,37 +250,38 @@ button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
-  display: none;               /* Hidden by default */
+  background-color: rgba(0,0,0,0.75);
+  display: none;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1100;
 }
 
 #deleteModalContent {
   background-color: #1e1e1e;
-  padding: 25px;
-  border-radius: 10px;
+  padding: 20px;
+  border-radius: 8px;
   border: 1px solid #444;
   text-align: center;
   width: 90%;
-  max-width: 400px;
+  max-width: 360px;
 }
 
 #deleteModalContent h2 {
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .modal-buttons button {
   flex: 1;
-  margin: 0 10px;
-  padding: 10px;
+  margin: 0 6px;
+  padding: 8px;
   border: none;
   border-radius: 5px;
   font-weight: bold;
@@ -198,4 +297,145 @@ button:hover {
 
 .modal-buttons .danger:hover {
   background-color: red;
+}
+
+/* ==========================
+   Modal: Password Prompt
+   ========================== */
+#passwordModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+#passwordModalContent {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  text-align: center;
+  width: 90%;
+  max-width: 360px;
+}
+
+#passwordModalContent h2 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+#passwordModalContent input {
+  margin-bottom: 12px;
+}
+
+/* =======================
+   Modal: Move Link Dialog
+   ======================= */
+#moveModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+#moveModalContent {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+}
+
+#moveModalContent h2 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+#folderOptions {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+}
+
+#folderOptions li {
+  padding: 8px;
+  margin-bottom: 6px;
+  background-color: #1b1b1b;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#folderOptions li:hover {
+  background-color: #333;
+}
+
+/* ==========================
+   Modal: Color Picker Dialog
+   ========================== */
+#colorModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+#colorModalContent {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  text-align: center;
+  width: 90%;
+  max-width: 360px;
+}
+
+#colorModalContent h2 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.color-cell {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid #1e1e1e;
+  transition: transform 0.1s;
+}
+
+.color-cell:hover {
+  transform: scale(1.1);
+}
+
+.hidden {
+  display: none !important;
 }
