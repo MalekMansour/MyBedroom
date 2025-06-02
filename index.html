@@ -2,73 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Upload and View Media</title>
+  <title>Upload and Save Media</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #121212; /* Dark gray background */
-      color: #f0f0f0;
+      background: #121212;
+      color: #fff;
+      font-family: sans-serif;
       padding: 20px;
-    }
-    h1 {
-      text-align: center;
     }
     input[type="file"] {
       display: block;
       margin: 20px auto;
-      background-color: #1e1e1e;
-      color: #f0f0f0;
-      border: 1px solid #444;
-      padding: 10px;
+    }
+    button {
+      display: block;
+      margin: 0 auto 30px;
+      padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
-    }
-    .preview {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-    }
-    .preview img, .preview video {
-      max-width: 300px;
-      max-height: 200px;
-      border: 2px solid #333;
-      border-radius: 8px;
-      background-color: #000;
     }
   </style>
 </head>
 <body>
 
-  <h1>Upload and View Images & Videos</h1>
-  <input type="file" multiple accept="image/*,video/*" onchange="previewFiles(event)">
-  
-  <div class="preview" id="preview"></div>
+  <h1>Upload Images & Videos</h1>
+  <input type="file" id="fileInput" multiple accept="image/*,video/*">
+  <button onclick="uploadFiles()">Upload</button>
 
   <script>
-    function previewFiles(event) {
-      const files = event.target.files;
-      const previewContainer = document.getElementById('preview');
+    function uploadFiles() {
+      const input = document.getElementById('fileInput');
+      const files = input.files;
+      if (!files.length) return;
 
-      Array.from(files).forEach(file => {
-        const reader = new FileReader();
+      const formData = new FormData();
+      for (let file of files) {
+        formData.append('files', file);
+      }
 
-        reader.onload = function(e) {
-          const mediaType = file.type.split('/')[0];
-          if (mediaType === 'image') {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            previewContainer.appendChild(img);
-          } else if (mediaType === 'video') {
-            const video = document.createElement('video');
-            video.src = e.target.result;
-            video.controls = true;
-            previewContainer.appendChild(video);
-          }
-        };
-
-        reader.readAsDataURL(file);
-      });
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.text())
+      .then(msg => alert(msg))
+      .catch(err => console.error(err));
     }
   </script>
 
