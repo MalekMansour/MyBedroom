@@ -3,41 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Media Viewer</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    input, button {
-      margin: 10px;
-    }
-    .preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-    }
-    .preview img, .preview video {
-      max-width: 300px;
-      max-height: 200px;
-      border: 2px solid #444;
-      border-radius: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="index.html">Media Viewer</a>
+    <a href="links.html">Saved Links</a>
+  </div>
 
-  <h1>Upload and View Your Media</h1>
-  <form action="/upload" method="POST" enctype="multipart/form-data">
-    <input type="file" name="files" multiple accept="image/*,video/*">
-    <button type="submit">Upload</button>
-  </form>
+  <div class="main">
+    <h1>Upload and View Media</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <input type="file" name="files" multiple accept="image/*,video/*">
+      <button type="submit">Upload</button>
+    </form>
 
-  <h2>Uploaded Media</h2>
-  <div class="preview" id="preview"></div>
+    <h2>Uploaded Media</h2>
+    <div class="preview" id="preview"></div>
+  </div>
 
   <script>
     async function loadMedia() {
@@ -64,6 +48,5 @@
 
     window.onload = loadMedia;
   </script>
-
 </body>
 </html>
