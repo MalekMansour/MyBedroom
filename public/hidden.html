@@ -3,31 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>Hidden Links</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Menu</h2>
     <a href="index.html">Saved Links</a>
     <a href="hidden.html">Hidden Links</a>
   </div>
 
+  <!-- Main Content -->
   <div class="main">
     <h1>Hidden Links</h1>
 
+    <!-- Section: Set Password (only if none exists) -->
     <div id="setupPassword" style="display: none;">
       <p>Create a password to protect hidden links:</p>
       <input type="password" id="newPassword" placeholder="New password">
       <button onclick="setPassword()">Set Password</button>
     </div>
 
+    <!-- Section: Login with Password (if password exists) -->
     <div id="loginSection" style="display: none;">
       <p>Enter your hidden links password:</p>
       <input type="password" id="loginPassword" placeholder="Enter password">
       <button onclick="checkPassword()">Unlock</button>
-      <p id="errorMsg" style="color: red;"></p>
+      <p id="errorMsg" style="color: red; margin-top: 10px;"></p>
     </div>
 
+    <!-- Section: Display & Add Hidden Links (after unlocking) -->
     <div id="hiddenLinksSection" style="display: none;">
       <form id="hiddenLinkForm">
         <input type="text" id="name" placeholder="Website Name" required><br>
@@ -41,29 +46,47 @@
     </div>
   </div>
 
+  <!-- Delete Confirmation Modal (same as index.html) -->
+  <div id="deleteModal">
+    <div id="deleteModalContent">
+      <h2>Are you sure you want to permanently delete this website?</h2>
+      <div class="modal-buttons">
+        <button onclick="closeModal()">Cancel</button>
+        <button class="danger" onclick="confirmDeleteFinal()">Delete</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // Retrieve stored password & hidden links
     const storedPassword = localStorage.getItem('hiddenPassword');
     const hiddenLinks = JSON.parse(localStorage.getItem('hiddenLinks') || '[]');
 
+    // Sections in the DOM
     const setupPasswordSection = document.getElementById('setupPassword');
     const loginSection = document.getElementById('loginSection');
     const hiddenLinksSection = document.getElementById('hiddenLinksSection');
     const linkList = document.getElementById('linkList');
 
+    // Determine which section to show
     if (!storedPassword) {
       setupPasswordSection.style.display = 'block';
     } else {
       loginSection.style.display = 'block';
     }
 
+    // Set a new password
     function setPassword() {
       const newPassword = document.getElementById('newPassword').value;
-      if (newPassword.trim().length < 3) return alert('Password too short');
+      if (newPassword.trim().length < 3) {
+        return alert('Password too short (min 3 characters).');
+      }
       localStorage.setItem('hiddenPassword', newPassword);
-      alert('Password set! Reloading...');
+      alert('Password set successfully! Reloading...');
       location.reload();
     }
 
+    // Check entered password against storedPassword
     function checkPassword() {
       const input = document.getElementById('loginPassword').value;
       const errorMsg = document.getElementById('errorMsg');
@@ -76,6 +99,7 @@
       }
     }
 
+    // Handle adding a new hidden link
     const form = document.getElementById('hiddenLinkForm');
     form.onsubmit = e => {
       e.preventDefault();
@@ -90,30 +114,43 @@
       displayLinks();
     };
 
+    // Display all hidden links (once unlocked)
     function displayLinks() {
-  linkList.innerHTML = '';
-  hiddenLinks.forEach((link, index) => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <h3>
-        <a href="${link.url}" target="_blank">${link.name}</a>
-        <span class="delete-btn" onclick="confirmHiddenDelete(${index})">🗑️</span>
-      </h3>
-      <p>${link.description}</p>
-    `;
-    linkList.appendChild(div);
-  });
-}
+      linkList.innerHTML = '';
+      hiddenLinks.forEach((link, index) => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <h3>
+            <a href="${link.url}" target="_blank">${link.name}</a>
+            <span class="delete-btn" onclick="confirmHiddenDelete(${index})">🗑️</span>
+          </h3>
+          <p>${link.description}</p>
+        `;
+        linkList.appendChild(div);
+      });
+    }
 
-function confirmHiddenDelete(index) {
-  const confirmed = confirm("Are you sure you want to permanently delete this hidden website? This action cannot be undone.");
-  if (confirmed) {
-    hiddenLinks.splice(index, 1);
-    localStorage.setItem('hiddenLinks', JSON.stringify(hiddenLinks));
-    displayLinks();
-  }
-}
+    // Modal control for hidden links deletion
+    let hiddenDeleteIndex = null;
 
+    function confirmHiddenDelete(index) {
+      hiddenDeleteIndex = index;
+      document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+      hiddenDeleteIndex = null;
+    }
+
+    function confirmDeleteFinal() {
+      if (hiddenDeleteIndex !== null) {
+        hiddenLinks.splice(hiddenDeleteIndex, 1);
+        localStorage.setItem('hiddenLinks', JSON.stringify(hiddenLinks));
+        displayLinks();
+      }
+      closeModal();
+    }
   </script>
 </body>
 </html>
