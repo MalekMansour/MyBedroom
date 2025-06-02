@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hidden Links</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="index.html">Saved Links</a>
+    <a href="hidden.html">Hidden Links</a>
+  </div>
+
+  <div class="main">
+    <h1>Hidden Links</h1>
+
+    <div id="setupPassword" style="display: none;">
+      <p>Create a password to protect hidden links:</p>
+      <input type="password" id="newPassword" placeholder="New password">
+      <button onclick="setPassword()">Set Password</button>
+    </div>
+
+    <div id="loginSection" style="display: none;">
+      <p>Enter your hidden links password:</p>
+      <input type="password" id="loginPassword" placeholder="Enter password">
+      <button onclick="checkPassword()">Unlock</button>
+      <p id="errorMsg" style="color: red;"></p>
+    </div>
+
+    <div id="hiddenLinksSection" style="display: none;">
+      <form id="hiddenLinkForm">
+        <input type="text" id="name" placeholder="Website Name" required><br>
+        <input type="url" id="url" placeholder="https://example.com" required><br>
+        <textarea id="description" placeholder="Description" rows="3"></textarea><br>
+        <button type="submit">Save Hidden Link</button>
+      </form>
+
+      <h2>Your Hidden Links</h2>
+      <div id="linkList"></div>
+    </div>
+  </div>
+
+  <script>
+    const storedPassword = localStorage.getItem('hiddenPassword');
+    const hiddenLinks = JSON.parse(localStorage.getItem('hiddenLinks') || '[]');
+
+    const setupPasswordSection = document.getElementById('setupPassword');
+    const loginSection = document.getElementById('loginSection');
+    const hiddenLinksSection = document.getElementById('hiddenLinksSection');
+    const linkList = document.getElementById('linkList');
+
+    if (!storedPassword) {
+      setupPasswordSection.style.display = 'block';
+    } else {
+      loginSection.style.display = 'block';
+    }
+
+    function setPassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      if (newPassword.trim().length < 3) return alert('Password too short');
+      localStorage.setItem('hiddenPassword', newPassword);
+      alert('Password set! Reloading...');
+      location.reload();
+    }
+
+    function checkPassword() {
+      const input = document.getElementById('loginPassword').value;
+      const errorMsg = document.getElementById('errorMsg');
+      if (input === storedPassword) {
+        loginSection.style.display = 'none';
+        hiddenLinksSection.style.display = 'block';
+        displayLinks();
+      } else {
+        errorMsg.textContent = 'Incorrect password';
+      }
+    }
+
+    const form = document.getElementById('hiddenLinkForm');
+    form.onsubmit = e => {
+      e.preventDefault();
+      const link = {
+        name: document.getElementById('name').value,
+        url: document.getElementById('url').value,
+        description: document.getElementById('description').value
+      };
+      hiddenLinks.push(link);
+      localStorage.setItem('hiddenLinks', JSON.stringify(hiddenLinks));
+      form.reset();
+      displayLinks();
+    };
+
+    function displayLinks() {
+      linkList.innerHTML = '';
+      hiddenLinks.forEach(link => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <h3><a href="${link.url}" target="_blank">${link.name}</a></h3>
+          <p>${link.description}</p>
+        `;
+        linkList.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
