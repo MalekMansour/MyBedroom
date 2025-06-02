@@ -99,3 +99,15 @@ button:hover {
 #linkList a:hover {
   text-decoration: underline;
 }
+
+.delete-btn {
+  float: right;
+  cursor: pointer;
+  font-size: 18px;
+  color: #777;
+  transition: color 0.2s ease;
+}
+
+.delete-btn:hover {
+  color: red;
+}
