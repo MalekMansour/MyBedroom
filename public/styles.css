@@ -1,33 +1,103 @@
-body {
+/* Base Reset */
+* {
+  box-sizing: border-box;
   margin: 0;
-  background-color: #121212;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  display: flex;
+  padding: 0;
 }
 
-.sidebar {
-  width: 200px;
-  background-color: #1e1e1e;
-  padding: 20px;
+/* Body + Layout */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+  display: flex;
   height: 100vh;
-  box-sizing: border-box;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #1a1a1a;
+  padding: 25px 15px;
+  border-right: 1px solid #333;
+  transition: background 0.3s ease;
+}
+
+.sidebar h2 {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .sidebar a {
   display: block;
+  padding: 10px 15px;
   margin: 10px 0;
-  color: #fff;
+  color: #ccc;
   text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.2s ease;
 }
 
 .sidebar a:hover {
-  text-decoration: underline;
+  background-color: #333;
+  color: #fff;
 }
 
+/* Main Content Area */
 .main {
   flex: 1;
-  padding: 20px;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* Headings */
+.main h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.main h2 {
+  margin-top: 30px;
+  font-size: 1.4rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
+
+/* Forms */
+input, textarea, button {
+  width: 100%;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 15px;
+  transition: border 0.2s;
+}
+
+input:focus, textarea:focus {
+  border-color: #555;
+  outline: none;
+}
+
+button {
+  background-color: #333;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+/* Media Preview */
+.preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
 }
 
 .preview img,
@@ -36,11 +106,28 @@ body {
   max-height: 200px;
   border: 2px solid #444;
   border-radius: 10px;
+  background-color: #000;
 }
 
-.preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
+/* Saved Links */
+#linkList {
+  margin-top: 20px;
+}
+
+#linkList div {
+  background-color: #1b1b1b;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #333;
+}
+
+#linkList a {
+  color: #4fc3f7;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+#linkList a:hover {
+  text-decoration: underline;
 }
