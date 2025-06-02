@@ -2,105 +2,638 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Saved Links</title>
+  <title>Link Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Sidebar -->
+
+  <!-- =====================
+       SIDEBAR (folders)
+       ===================== -->
   <div class="sidebar">
-    <h2>Menu</h2>
-    <a href="index.html">Saved Links</a>
-    <a href="hidden.html">Hidden Links</a>
+    <h2>Folders</h2>
+    <ul id="folderList"></ul>
+    <button id="addFolderBtn">+ Add Folder</button>
   </div>
 
-  <!-- Main Content -->
+  <!-- =====================
+       MAIN CONTENT AREA
+       ===================== -->
   <div class="main">
-    <h1>Save Website Links</h1>
-    <form id="linkForm">
-      <input type="text" id="name" placeholder="Website Name" required><br>
-      <input type="url" id="url" placeholder="https://example.com" required><br>
-      <textarea id="description" placeholder="Description" rows="3"></textarea><br>
-      <button type="submit">Save Link</button>
-    </form>
+    <h1 id="folderTitle">Loading...</h1>
 
-    <h2>Your Saved Links</h2>
+    <!-- Form to add a new link (visible if folder is not Hidden or after unlocking) -->
+    <div id="linkFormContainer">
+      <form id="linkForm">
+        <input type="text" id="linkName" placeholder="Website Name" required>
+        <input type="url" id="linkURL" placeholder="https://example.com" required>
+        <textarea id="linkDesc" placeholder="Description" rows="2"></textarea>
+        <button type="submit">Save Link</button>
+      </form>
+    </div>
+
+    <!-- Filter by color -->
+    <div id="filterContainer">
+      <label for="colorFilter">Filter by Color:</label>
+      <select id="colorFilter">
+        <option value="">All</option>
+      </select>
+    </div>
+
+    <!-- List of links -->
     <div id="linkList"></div>
   </div>
 
-  <!-- Delete Confirmation Modal -->
+  <!-- ======================
+       CONTEXT MENU (hidden by default)
+       ====================== -->
+  <div id="contextMenu" class="context-menu">
+    <ul>
+      <li id="ctxMove">Move to Folder…</li>
+      <li id="ctxColor">Set Color Tag…</li>
+      <li id="ctxShare">Share by Email</li>
+      <li id="ctxDelete">Delete Link</li>
+    </ul>
+  </div>
+
+  <!-- =========================
+       MODAL: DELETE CONFIRMATION
+       ========================= -->
   <div id="deleteModal">
     <div id="deleteModalContent">
-      <h2>Are you sure you want to permanently delete this website?</h2>
+      <h2>Are you sure you want to permanently delete this link?</h2>
       <div class="modal-buttons">
-        <button onclick="closeModal()">Cancel</button>
-        <button class="danger" onclick="confirmDeleteFinal()">Delete</button>
+        <button onclick="closeDeleteModal()">Cancel</button>
+        <button class="danger" onclick="confirmDelete()">Delete</button>
       </div>
     </div>
   </div>
 
+  <!-- ======================
+       MODAL: PASSWORD PROMPT
+       ====================== -->
+  <div id="passwordModal">
+    <div id="passwordModalContent">
+      <h2 id="pwdModalTitle">Enter Password</h2>
+      <input type="password" id="pwdInput" placeholder="Password">
+      <p id="pwdError" style="color: red; margin-top: 6px;"></p>
+      <div class="modal-buttons">
+        <button onclick="cancelPassword()">Cancel</button>
+        <button onclick="submitPassword()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================
+       MODAL: MOVE LINK
+       ===================== -->
+  <div id="moveModal">
+    <div id="moveModalContent">
+      <h2>Select a Destination Folder</h2>
+      <ul id="folderOptions"></ul>
+      <div class="modal-buttons" style="margin-top: 15px;">
+        <button onclick="closeMoveModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================
+       MODAL: COLOR PICKER
+       ===================== -->
+  <div id="colorModal">
+    <div id="colorModalContent">
+      <h2>Choose a Color Tag</h2>
+      <div class="color-grid" id="colorGrid"></div>
+      <div class="modal-buttons" style="margin-top: 15px;">
+        <button onclick="closeColorModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =====================
+       JavaScript Logic
+       ===================== -->
   <script>
-    // Retrieve existing normal links from localStorage
-    const savedLinks = JSON.parse(localStorage.getItem('links') || '[]');
-    const form = document.getElementById('linkForm');
-    const linkList = document.getElementById('linkList');
+  (function() {
+    // ───────────────────────────────────────────────────────────────────────────
+    // 1) DATA STRUCTURES & INITIALIZATION
+    //───────────────────────────────────────────────────────────────────────────
+    // Each folder: { id: string, name: string, isHidden: boolean }
+    // Each link:   { id: string, folderId: string, name: string,
+    //               url: string, description: string, color: string }
+    // localStorage keys: 'folders', 'links', 'hiddenPassword'
 
-    // Index of the link pending deletion
-    let deleteIndex = null;
+    const DEFAULT_FOLDER_NAME = 'General';
+    const HIDDEN_FOLDER_NAME = 'Hidden';
 
-    // Display all normal links
-    function displayLinks() {
-      linkList.innerHTML = '';
-      savedLinks.forEach((link, index) => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-          <h3>
-            <a href="${link.url}" target="_blank">${link.name}</a>
-            <span class="delete-btn" onclick="confirmDelete(${index})">🗑️</span>
-          </h3>
-          <p>${link.description}</p>
-        `;
-        linkList.appendChild(div);
+    let folders = [];          // Array of folder objects
+    let links = [];            // Array of link objects
+    let currentFolderId = null;// ID of the folder currently open
+
+    // Modal State
+    let pendingDeleteLinkId = null;
+    let pendingMoveLinkId = null;
+    let pendingColorLinkId = null;
+    let pendingMoveTargetFolderId = null;
+
+    // Password Modal State
+    let passwordMode = ''; // 'setHidden' or 'verifyHidden'
+
+    // 25‐color palette (hex codes)
+    const COLOR_PALETTE = [
+      '#e6194b','#3cb44b','#ffe119','#4363d8','#f58231',
+      '#911eb4','#46f0f0','#f032e6','#bcf60c','#fabebe',
+      '#008080','#e6beff','#9a6324','#fffac8','#800000',
+      '#aaffc3','#808000','#ffd8b1','#000075','#808080',
+      '#ffffff','#000000','#cfcfcf','#ffcccc','#ccffcc'
+    ];
+
+    // Utilities for localStorage
+    function saveFolders() {
+      localStorage.setItem('folders', JSON.stringify(folders));
+    }
+    function saveLinks() {
+      localStorage.setItem('links', JSON.stringify(links));
+    }
+    function loadData() {
+      folders = JSON.parse(localStorage.getItem('folders') || 'null');
+      links   = JSON.parse(localStorage.getItem('links')   || 'null');
+
+      if (!folders) {
+        // First‐time setup: create “General” and “Hidden” folders
+        const genId = Date.now().toString();
+        const hidId = (Date.now()+1).toString();
+        folders = [
+          { id: genId, name: DEFAULT_FOLDER_NAME, isHidden: false },
+          { id: hidId, name: HIDDEN_FOLDER_NAME,  isHidden: true  }
+        ];
+        saveFolders();
+      }
+      if (!links) {
+        links = [];
+        saveLinks();
+      }
+    }
+
+    // Generate a unique ID string for new items
+    function genId() {
+      return Date.now().toString() + Math.floor(Math.random()*1000);
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 2) RENDERING FOLDERS IN SIDEBAR
+    //───────────────────────────────────────────────────────────────────────────
+    const folderListEl = document.getElementById('folderList');
+    const addFolderBtn = document.getElementById('addFolderBtn');
+
+    function renderFolderList() {
+      folderListEl.innerHTML = '';
+      folders.forEach(folder => {
+        const li = document.createElement('li');
+        li.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
+        li.dataset.folderId = folder.id;
+        if (folder.id === currentFolderId) {
+          li.classList.add('selected');
+        }
+        li.onclick = () => selectFolder(folder.id);
+        folderListEl.appendChild(li);
       });
     }
 
-    // Show modal and store index for deletion
-    function confirmDelete(index) {
-      deleteIndex = index;
-      document.getElementById('deleteModal').style.display = 'flex';
-    }
-
-    // Close modal without deleting
-    function closeModal() {
-      document.getElementById('deleteModal').style.display = 'none';
-      deleteIndex = null;
-    }
-
-    // If confirmed, remove the link and update localStorage
-    function confirmDeleteFinal() {
-      if (deleteIndex !== null) {
-        savedLinks.splice(deleteIndex, 1);
-        localStorage.setItem('links', JSON.stringify(savedLinks));
-        displayLinks();
+    addFolderBtn.onclick = () => {
+      const name = prompt('Enter new folder name:').trim();
+      if (!name) return;
+      // Do not allow “Hidden” (reserved)
+      if (name.toLowerCase() === HIDDEN_FOLDER_NAME.toLowerCase()) {
+        alert(`"${HIDDEN_FOLDER_NAME}" is reserved.`);
+        return;
       }
-      closeModal();
-    }
-
-    // Handle form submission (add new link)
-    form.onsubmit = e => {
-      e.preventDefault();
-      const link = {
-        name: document.getElementById('name').value,
-        url: document.getElementById('url').value,
-        description: document.getElementById('description').value
-      };
-      savedLinks.push(link);
-      localStorage.setItem('links', JSON.stringify(savedLinks));
-      form.reset();
-      displayLinks();
+      const newId = genId();
+      folders.push({ id: newId, name, isHidden: false });
+      saveFolders();
+      renderFolderList();
     };
 
-    // Initial render
-    displayLinks();
+    // ───────────────────────────────────────────────────────────────────────────
+    // 3) SELECT & DISPLAY CURRENT FOLDER
+    //───────────────────────────────────────────────────────────────────────────
+    const folderTitleEl    = document.getElementById('folderTitle');
+    const linkFormContainer= document.getElementById('linkFormContainer');
+    const linkForm         = document.getElementById('linkForm');
+    const linkListEl       = document.getElementById('linkList');
+    const colorFilterEl    = document.getElementById('colorFilter');
+
+    function selectFolder(folderId) {
+      const folder = folders.find(f => f.id === folderId);
+      if (!folder) return;
+      // If “Hidden” folder and password not set/verified, show password modal
+      if (folder.isHidden) {
+        const storedPwd = localStorage.getItem('hiddenPassword');
+        if (!storedPwd) {
+          // Ask user to set a new password
+          showPasswordModal('setHidden');
+          return;
+        }
+        // Ask for verification
+        showPasswordModal('verifyHidden', folderId);
+        return;
+      }
+      // Non‐hidden folder: simply open
+      openFolder(folderId);
+    }
+
+    function openFolder(folderId) {
+      currentFolderId = folderId;
+      const folder = folders.find(f => f.id === folderId);
+
+      folderTitleEl.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
+      linkFormContainer.classList.remove('hidden');
+      renderLinks();
+      renderFolderList();
+      buildColorFilterOptions();
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 4) PASSWORD MODAL (Set / Verify) FOR HIDDEN FOLDER
+    //───────────────────────────────────────────────────────────────────────────
+    const passwordModal    = document.getElementById('passwordModal');
+    const passwordModalTitle= document.getElementById('pwdModalTitle');
+    const pwdInput         = document.getElementById('pwdInput');
+    const pwdError         = document.getElementById('pwdError');
+
+    function showPasswordModal(mode, folderId = null) {
+      passwordMode = mode; // 'setHidden' or 'verifyHidden'
+      pwdInput.value = '';
+      pwdError.textContent = '';
+
+      if (mode === 'setHidden') {
+        passwordModalTitle.textContent = 'Create a password for Hidden folder';
+      } else if (mode === 'verifyHidden') {
+        passwordModalTitle.textContent = 'Enter password to open Hidden';
+        // Temporarily store the folder we want to open
+        pendingMoveTargetFolderId = folderId; // reuse var to hold dest
+      }
+      pwdInput.setAttribute('type', 'password');
+      passwordModal.style.display = 'flex';
+      pwdInput.focus();
+    }
+
+    function submitPassword() {
+      const val = pwdInput.value.trim();
+      if (passwordMode === 'setHidden') {
+        if (val.length < 3) {
+          pwdError.textContent = 'Password must be at least 3 chars.';
+          return;
+        }
+        localStorage.setItem('hiddenPassword', val);
+        passwordModal.style.display = 'none';
+        openFolder(folders.find(f => f.isHidden).id);
+      }
+      else if (passwordMode === 'verifyHidden') {
+        const stored = localStorage.getItem('hiddenPassword');
+        if (val === stored) {
+          passwordModal.style.display = 'none';
+          openFolder(pendingMoveTargetFolderId);
+        } else {
+          pwdError.textContent = 'Incorrect password.';
+        }
+      }
+      pendingMoveTargetFolderId = null;
+    }
+
+    function cancelPassword() {
+      passwordModal.style.display = 'none';
+      pendingMoveTargetFolderId = null;
+    }
+
+    // Close password modal when clicking outside or pressing Escape
+    window.addEventListener('click', e => {
+      if (e.target === passwordModal) cancelPassword();
+    });
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (passwordModal.style.display === 'flex') cancelPassword();
+        if (deleteModal.style.display === 'flex') closeDeleteModal();
+        if (moveModal.style.display === 'flex') closeMoveModal();
+        if (colorModal.style.display === 'flex') closeColorModal();
+      }
+    });
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 5) ADDING NEW LINKS
+    //───────────────────────────────────────────────────────────────────────────
+    linkForm.onsubmit = e => {
+      e.preventDefault();
+      if (!currentFolderId) return;
+      const name = document.getElementById('linkName').value.trim();
+      const url  = document.getElementById('linkURL').value.trim();
+      const desc = document.getElementById('linkDesc').value.trim();
+      if (!name || !url) return;
+
+      const newLink = {
+        id: genId(),
+        folderId: currentFolderId,
+        name,
+        url,
+        description: desc,
+        color: '' // no color by default
+      };
+      links.push(newLink);
+      saveLinks();
+      linkForm.reset();
+      renderLinks();
+    };
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 6) RENDERING & FILTERING LINKS IN THE CURRENT FOLDER
+    //───────────────────────────────────────────────────────────────────────────
+    function buildColorFilterOptions() {
+      // Clear previous options except “All”
+      colorFilterEl.innerHTML = '<option value="">All</option>';
+      COLOR_PALETTE.forEach(hex => {
+        const opt = document.createElement('option');
+        opt.value = hex;
+        opt.textContent = hex;
+        opt.style.backgroundColor = hex;
+        opt.style.color = '#000';
+        colorFilterEl.appendChild(opt);
+      });
+    }
+
+    colorFilterEl.onchange = () => {
+      renderLinks();
+    };
+
+    function renderLinks() {
+      linkListEl.innerHTML = '';
+      if (!currentFolderId) return;
+
+      const chosenColor = colorFilterEl.value;
+      const folderLinks = links
+        .filter(l => l.folderId === currentFolderId)
+        .filter(l => chosenColor === '' || l.color === chosenColor);
+
+      folderLinks.forEach(l => {
+        const item = document.createElement('div');
+        item.className = 'link-item';
+        // Left: link info
+        const info = document.createElement('div');
+        info.className = 'link-info';
+        info.innerHTML = `
+          <h3><a href="${l.url}" target="_blank">${l.name}</a></h3>
+          <p>${l.description}</p>
+        `;
+        // Right: colored stripe
+        const stripe = document.createElement('div');
+        stripe.className = 'link-color-stripe';
+        stripe.style.backgroundColor = l.color || 'transparent';
+
+        // Three‐dots menu icon
+        const menuIcon = document.createElement('span');
+        menuIcon.className = 'menu-icon';
+        menuIcon.textContent = '⋮';
+        menuIcon.onclick = e => openContextMenu(e, l.id);
+
+        item.appendChild(info);
+        item.appendChild(menuIcon);
+        item.appendChild(stripe);
+
+        linkListEl.appendChild(item);
+      });
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 7) CONTEXT MENU (⋮) FOR EACH LINK
+    //───────────────────────────────────────────────────────────────────────────
+    const contextMenu = document.getElementById('contextMenu');
+    const ctxMove   = document.getElementById('ctxMove');
+    const ctxShare  = document.getElementById('ctxShare');
+    const ctxColor  = document.getElementById('ctxColor');
+    const ctxDelete = document.getElementById('ctxDelete');
+
+    function openContextMenu(e, linkId) {
+      e.preventDefault();
+      pendingMoveLinkId = linkId;
+      pendingColorLinkId = linkId;
+      pendingDeleteLinkId = linkId;
+
+      // Position menu at cursor
+      const x = e.clientX;
+      const y = e.clientY;
+      contextMenu.style.top = y + 'px';
+      contextMenu.style.left = x + 'px';
+      contextMenu.style.display = 'block';
+    }
+
+    // Hide when clicking elsewhere
+    document.addEventListener('click', e => {
+      if (!contextMenu.contains(e.target)) {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    // MENU ACTION: Move to Folder…
+    ctxMove.onclick = () => {
+      contextMenu.style.display = 'none';
+      showMoveModal(pendingMoveLinkId);
+    };
+
+    // MENU ACTION: Set Color Tag…
+    ctxColor.onclick = () => {
+      contextMenu.style.display = 'none';
+      showColorModal(pendingColorLinkId);
+    };
+
+    // MENU ACTION: Share by Email
+    ctxShare.onclick = () => {
+      contextMenu.style.display = 'none';
+      const link = links.find(l => l.id === pendingMoveLinkId);
+      if (link) {
+        const subject = encodeURIComponent('Check out this link: ' + link.name);
+        const body = encodeURIComponent(`I thought you might like this:\n\n${link.name}\n${link.url}\n\n${link.description}`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      }
+    };
+
+    // MENU ACTION: Delete Link
+    ctxDelete.onclick = () => {
+      contextMenu.style.display = 'none';
+      showDeleteModal(pendingDeleteLinkId);
+    };
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 8) DELETE MODAL LOGIC
+    //───────────────────────────────────────────────────────────────────────────
+    const deleteModal      = document.getElementById('deleteModal');
+    // Show delete modal
+    function showDeleteModal(linkId) {
+      pendingDeleteLinkId = linkId;
+      deleteModal.style.display = 'flex';
+    }
+    function closeDeleteModal() {
+      deleteModal.style.display = 'none';
+      pendingDeleteLinkId = null;
+    }
+    function confirmDelete() {
+      if (pendingDeleteLinkId) {
+        links = links.filter(l => l.id !== pendingDeleteLinkId);
+        saveLinks();
+        renderLinks();
+      }
+      closeDeleteModal();
+    }
+    // Close when clicking outside modal
+    window.addEventListener('click', e => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 9) MOVE LINK MODAL
+    //───────────────────────────────────────────────────────────────────────────
+    const moveModal       = document.getElementById('moveModal');
+    const folderOptionsEl = document.getElementById('folderOptions');
+
+    function showMoveModal(linkId) {
+      pendingMoveLinkId = linkId;
+      // Populate folderOptions list
+      folderOptionsEl.innerHTML = '';
+      folders.forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = f.name + (f.isHidden ? ' 🔒' : '');
+        li.dataset.folderId = f.id;
+        li.onclick = () => attemptMoveLink(f.id);
+        folderOptionsEl.appendChild(li);
+      });
+      moveModal.style.display = 'flex';
+    }
+
+    function closeMoveModal() {
+      moveModal.style.display = 'none';
+      pendingMoveLinkId = null;
+      pendingMoveTargetFolderId = null;
+    }
+
+    function attemptMoveLink(targetFolderId) {
+      const target = folders.find(f => f.id === targetFolderId);
+      if (!target) return;
+
+      // If target is hidden, require password
+      if (target.isHidden) {
+        const storedPwd = localStorage.getItem('hiddenPassword');
+        if (!storedPwd) {
+          // Have to set password first
+          closeMoveModal();
+          showPasswordModal('setHidden');
+          pendingMoveTargetFolderId = targetFolderId;
+          return;
+        }
+        // Prompt for password
+        closeMoveModal();
+        passwordMode = 'verifyMoveHidden';
+        pendingMoveTargetFolderId = targetFolderId;
+        showPasswordModal('verifyHidden');
+        return;
+      }
+
+      // Otherwise, just move immediately
+      moveLinkToFolder(pendingMoveLinkId, targetFolderId);
+      closeMoveModal();
+    }
+
+    // After password verification for moving into hidden
+    function submitPassword() {
+      const val = pwdInput.value.trim();
+      if (passwordMode === 'setHidden') {
+        if (val.length < 3) {
+          pwdError.textContent = 'Password must be at least 3 chars.';
+          return;
+        }
+        localStorage.setItem('hiddenPassword', val);
+        passwordModal.style.display = 'none';
+        openFolder(folders.find(f => f.isHidden).id);
+        return;
+      }
+      if (passwordMode === 'verifyHidden') {
+        const stored = localStorage.getItem('hiddenPassword');
+        if (val === stored) {
+          passwordModal.style.display = 'none';
+          openFolder(pendingMoveTargetFolderId || folders.find(f => f.isHidden).id);
+          // If verifying for move:
+          if (pendingMoveTargetFolderId && pendingMoveLinkId) {
+            moveLinkToFolder(pendingMoveLinkId, pendingMoveTargetFolderId);
+            pendingMoveTargetFolderId = null;
+            pendingMoveLinkId = null;
+          }
+        } else {
+          pwdError.textContent = 'Incorrect password.';
+        }
+      }
+    }
+
+    function moveLinkToFolder(linkId, destFolderId) {
+      const idx = links.findIndex(l => l.id === linkId);
+      if (idx === -1) return;
+      links[idx].folderId = destFolderId;
+      saveLinks();
+      renderLinks();
+    }
+    // Close move modal when clicking outside
+    window.addEventListener('click', e => {
+      if (e.target === moveModal) closeMoveModal();
+    });
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 10) COLOR PICKER MODAL
+    //───────────────────────────────────────────────────────────────────────────
+    const colorModal   = document.getElementById('colorModal');
+    const colorGrid    = document.getElementById('colorGrid');
+
+    function showColorModal(linkId) {
+      pendingColorLinkId = linkId;
+      colorGrid.innerHTML = '';
+      COLOR_PALETTE.forEach(hex => {
+        const cell = document.createElement('div');
+        cell.className = 'color-cell';
+        cell.style.backgroundColor = hex;
+        cell.onclick = () => selectColorForLink(hex);
+        colorGrid.appendChild(cell);
+      });
+      colorModal.style.display = 'flex';
+    }
+
+    function closeColorModal() {
+      colorModal.style.display = 'none';
+      pendingColorLinkId = null;
+    }
+
+    function selectColorForLink(hex) {
+      const idx = links.findIndex(l => l.id === pendingColorLinkId);
+      if (idx === -1) return;
+      links[idx].color = hex;
+      saveLinks();
+      renderLinks();
+      closeColorModal();
+    }
+    // Close color modal when clicking outside
+    window.addEventListener('click', e => {
+      if (e.target === colorModal) closeColorModal();
+    });
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // 11) INITIAL SETUP & ENTRY POINT
+    //───────────────────────────────────────────────────────────────────────────
+    function init() {
+      loadData();
+      // By default, open “General” folder
+      const gen = folders.find(f => !f.isHidden);
+      if (gen) currentFolderId = gen.id;
+      renderFolderList();
+      openFolder(currentFolderId);
+    }
+
+    init();
+  })();
   </script>
 </body>
 </html>
