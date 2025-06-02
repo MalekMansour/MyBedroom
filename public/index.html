@@ -2,51 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Media Viewer</title>
+  <title>Saved Links</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="sidebar">
     <h2>Menu</h2>
-    <a href="index.html">Media Viewer</a>
-    <a href="links.html">Saved Links</a>
+    <a href="index.html">Saved Links</a>
   </div>
 
   <div class="main">
-    <h1>Upload and View Media</h1>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <input type="file" name="files" multiple accept="image/*,video/*">
-      <button type="submit">Upload</button>
+    <h1>Save Website Links</h1>
+    <form id="linkForm">
+      <input type="text" id="name" placeholder="Website Name" required><br>
+      <input type="url" id="url" placeholder="https://example.com" required><br>
+      <textarea id="description" placeholder="Description" rows="3"></textarea><br>
+      <button type="submit">Save Link</button>
     </form>
 
-    <h2>Uploaded Media</h2>
-    <div class="preview" id="preview"></div>
+    <h2>Your Saved Links</h2>
+    <div id="linkList"></div>
   </div>
 
   <script>
-    async function loadMedia() {
-      const res = await fetch('/media');
-      const files = await res.json();
-      const preview = document.getElementById('preview');
-      preview.innerHTML = '';
+    const form = document.getElementById('linkForm');
+    const linkList = document.getElementById('linkList');
 
-      files.forEach(file => {
-        const ext = file.split('.').pop().toLowerCase();
-        const src = `/uploads/${file}`;
-        if (['mp4', 'webm', 'ogg'].includes(ext)) {
-          const video = document.createElement('video');
-          video.src = src;
-          video.controls = true;
-          preview.appendChild(video);
-        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-          const img = document.createElement('img');
-          img.src = src;
-          preview.appendChild(img);
-        }
+    const savedLinks = JSON.parse(localStorage.getItem('links') || '[]');
+
+    function displayLinks() {
+      linkList.innerHTML = '';
+      savedLinks.forEach((link, i) => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <h3><a href="${link.url}" target="_blank">${link.name}</a></h3>
+          <p>${link.description}</p>
+        `;
+        linkList.appendChild(div);
       });
     }
 
-    window.onload = loadMedia;
+    form.onsubmit = e => {
+      e.preventDefault();
+      const link = {
+        name: document.getElementById('name').value,
+        url: document.getElementById('url').value,
+        description: document.getElementById('description').value
+      };
+      savedLinks.push(link);
+      localStorage.setItem('links', JSON.stringify(savedLinks));
+      form.reset();
+      displayLinks();
+    };
+
+    displayLinks();
   </script>
 </body>
 </html>
