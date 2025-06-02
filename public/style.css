@@ -88,15 +88,17 @@ body {
   margin-bottom: 15px;
 }
 
-#linkForm {
+#linkFormContainer {
   margin-bottom: 25px;
+}
+
+#linkForm {
+  display: block;
 }
 
 #linkForm input,
 #linkForm textarea,
-#linkForm button,
-#passwordForm input,
-#passwordForm button {
+#linkForm button {
   width: 100%;
   background: #1e1e1e;
   border: 1px solid #333;
@@ -108,21 +110,18 @@ body {
 }
 
 #linkForm input:focus,
-#linkForm textarea:focus,
-#passwordForm input:focus {
+#linkForm textarea:focus {
   border-color: #555;
   outline: none;
 }
 
-#linkForm button,
-#passwordForm button {
+#linkForm button {
   background-color: #333;
   cursor: pointer;
   font-weight: bold;
 }
 
-#linkForm button:hover,
-#passwordForm button:hover {
+#linkForm button:hover {
   background-color: #444;
 }
 
@@ -192,7 +191,7 @@ body {
 }
 
 /* ====================
-   Three‐Dots Menu Icon
+   Three-Dots Menu Icon
    ==================== */
 .menu-icon {
   font-size: 18px;
@@ -202,6 +201,7 @@ body {
   margin-left: 12px;
   border-radius: 4px;
   transition: background 0.2s, color 0.2s;
+  user-select: none;
 }
 
 .menu-icon:hover {
@@ -218,7 +218,7 @@ body {
   border: 1px solid #333;
   border-radius: 5px;
   display: none;
-  z-index: 1000;
+  z-index: 1500; /* higher so it’s on top */
   width: 180px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
@@ -254,7 +254,7 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1100;
+  z-index: 1600;
 }
 
 #deleteModalContent {
@@ -312,7 +312,7 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1100;
+  z-index: 1600;
 }
 
 #passwordModalContent {
@@ -347,7 +347,7 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1100;
+  z-index: 1600;
 }
 
 #moveModalContent {
@@ -399,7 +399,7 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1100;
+  z-index: 1600;
 }
 
 #colorModalContent {
@@ -436,6 +436,9 @@ body {
   transform: scale(1.1);
 }
 
+/* =========================
+   Miscellaneous Styles
+   ========================= */
 .hidden {
   display: none !important;
 }
