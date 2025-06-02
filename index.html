@@ -6,8 +6,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
+      background: #121212; /* Dark gray */
+      color: #f0f0f0;
       padding: 20px;
     }
     h1 {
@@ -16,6 +16,12 @@
     input[type="file"] {
       display: block;
       margin: 20px auto;
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      border: 1px solid #444;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
     }
     .preview {
       display: flex;
@@ -26,8 +32,9 @@
     .preview img, .preview video {
       max-width: 300px;
       max-height: 200px;
-      border: 2px solid #555;
+      border: 2px solid #333;
       border-radius: 8px;
+      background-color: #000;
     }
   </style>
 </head>
@@ -42,7 +49,7 @@
     function previewFiles(event) {
       const files = event.target.files;
       const previewContainer = document.getElementById('preview');
-      previewContainer.innerHTML = ''; // Clear previous content
+      previewContainer.innerHTML = ''; 
 
       Array.from(files).forEach(file => {
         const reader = new FileReader();
