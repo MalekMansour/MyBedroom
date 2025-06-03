@@ -147,7 +147,7 @@ body {
 }
 
 #linkList .link-item {
-  background-color: #1b1b1b;
+  /* The background-color will be set inline via JS */
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 12px;
@@ -155,8 +155,10 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  transition: background 0.2s;
 }
 
+/* Link text */
 .link-info {
   flex: 1;
 }
@@ -164,10 +166,11 @@ body {
 .link-info h3 {
   font-size: 1.1rem;
   margin-bottom: 4px;
+  color: #fff;
 }
 
 .link-info a {
-  color: #4fc3f7;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -178,16 +181,8 @@ body {
 .link-info p {
   font-size: 0.9rem;
   margin-top: 4px;
-  color: #bbb;
+  color: #ddd;
   word-break: break-all;
-}
-
-/* Colored stripe on the right side */
-.link-color-stripe {
-  width: 12px;
-  height: 100%;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
 }
 
 /* ====================
@@ -218,7 +213,7 @@ body {
   border: 1px solid #333;
   border-radius: 5px;
   display: none;
-  z-index: 1500; /* higher so it’s on top */
+  z-index: 1500; /* higher so it sits on top */
   width: 180px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
@@ -419,13 +414,13 @@ body {
 
 .color-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
 .color-cell {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 4px;
   cursor: pointer;
   border: 2px solid #1e1e1e;
