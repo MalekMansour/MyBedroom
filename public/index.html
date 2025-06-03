@@ -140,20 +140,20 @@
     // Password Modal State
     let passwordMode = ''; // 'setHidden' or 'verifyHidden'
 
-    // 12-color palette (hex codes)
+    // 12-color palette with names
     const COLOR_PALETTE = [
-      '#e6194b', // red
-      '#3cb44b', // green
-      '#ffe119', // yellow
-      '#4363d8', // blue
-      '#f58231', // orange
-      '#911eb4', // purple
-      '#46f0f0', // cyan
-      '#f032e6', // magenta
-      '#bcf60c', // lime
-      '#fabebe', // peach
-      '#008080', // teal
-      '#e6beff'  // lavender
+      { name: 'Red Light', hex: '#D71313' },
+      { name: 'Crimson',   hex: '#BE3144' },
+      { name: 'Hot Pink',  hex: '#FF55BB' },
+      { name: 'Soft Pink', hex: '#EC7FA9' },
+      { name: 'Platinum',  hex: '#7F55B1' },
+      { name: 'Lilac',     hex: '#6F69AC' },
+      { name: 'Midnight',  hex: '#2D336B' },
+      { name: 'Electric',  hex: '#3A59D1' },
+      { name: 'Forest',    hex: '#169976' },
+      { name: 'Sage',      hex: '#6A9C89' },
+      { name: 'Pumpkin',   hex: '#E78B48' },
+      { name: 'Mustard',   hex: '#EFB036' },
     ];
 
     // Utilities for localStorage
@@ -367,11 +367,12 @@
     function buildColorFilterOptions() {
       // Clear previous options except “All”
       colorFilterEl.innerHTML = '<option value="">All</option>';
-      COLOR_PALETTE.forEach(hex => {
+      COLOR_PALETTE.forEach(colorObj => {
         const opt = document.createElement('option');
-        opt.value = hex;
-        opt.textContent = hex;
-        opt.style.backgroundColor = hex;
+        opt.value = colorObj.hex;
+        opt.textContent = colorObj.name;
+        // Optionally: show swatch background
+        opt.style.backgroundColor = colorObj.hex;
         opt.style.color = '#000';
         colorFilterEl.appendChild(opt);
       });
@@ -393,11 +394,8 @@
       folderLinks.forEach(l => {
         const item = document.createElement('div');
         item.className = 'link-item';
-
-        // Colored stripe (LEFT edge)
-        const stripe = document.createElement('div');
-        stripe.className = 'link-color-stripe';
-        stripe.style.backgroundColor = l.color || 'transparent';
+        // Set background to chosen color (or default dark if no color)
+        item.style.backgroundColor = l.color || '#1b1b1b';
 
         // Link info (middle)
         const info = document.createElement('div');
@@ -413,7 +411,6 @@
         menuIcon.textContent = '⋮';
         menuIcon.addEventListener('click', e => openContextMenu(e, l.id));
 
-        item.appendChild(stripe);
         item.appendChild(info);
         item.appendChild(menuIcon);
 
@@ -440,7 +437,7 @@
       // Position menu slightly to the left of cursor
       const menuWidth = 180; // matches the CSS width
       let x = e.clientX - (menuWidth - 20);
-      if (x < 5) x = 5; // don’t go off-screen too far left
+      if (x < 5) x = 5; // prevent going off-screen too far left
       let y = e.clientY + 5;
       contextMenu.style.top  = y + 'px';
       contextMenu.style.left = x + 'px';
@@ -595,11 +592,12 @@
     function showColorModal(linkId) {
       pendingColorLinkId = linkId;
       colorGrid.innerHTML = '';
-      COLOR_PALETTE.forEach(hex => {
+      COLOR_PALETTE.forEach(colorObj => {
         const cell = document.createElement('div');
         cell.className = 'color-cell';
-        cell.style.backgroundColor = hex;
-        cell.onclick = () => selectColorForLink(hex);
+        cell.style.backgroundColor = colorObj.hex;
+        cell.title = colorObj.name; // Hover text shows the name
+        cell.onclick = () => selectColorForLink(colorObj.hex);
         colorGrid.appendChild(cell);
       });
       colorModal.style.display = 'flex';
