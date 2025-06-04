@@ -58,11 +58,9 @@
   </div>
 
   <script>
-    // Retrieve stored password & hidden links
     const storedPassword = localStorage.getItem('hiddenPassword');
     const hiddenLinks = JSON.parse(localStorage.getItem('hiddenLinks') || '[]');
 
-    // Sections in the DOM
     const setupPasswordSection = document.getElementById('setupPassword');
     const loginSection = document.getElementById('loginSection');
     const hiddenLinksSection = document.getElementById('hiddenLinksSection');
@@ -86,7 +84,6 @@
       location.reload();
     }
 
-    // Check entered password against storedPassword
     function checkPassword() {
       const input = document.getElementById('loginPassword').value;
       const errorMsg = document.getElementById('errorMsg');
@@ -130,7 +127,6 @@
       });
     }
 
-    // Modal control for hidden links deletion
     let hiddenDeleteIndex = null;
 
     function confirmHiddenDelete(index) {
