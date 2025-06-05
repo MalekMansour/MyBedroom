@@ -5,11 +5,11 @@
   <title>Link Manager</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ================
+    /* =====================
        Additional Styles
-       ================ */
+       ===================== */
 
-    /* Delete icon next to folder names */
+    /* Delete icon next to folder names (removed from sidebar) */
     .folder-delete-icon {
       font-size: 14px;
       color: #777;
@@ -22,7 +22,7 @@
       color: red;
     }
 
-    /* “Manage Passwords” button styling */
+    /* “Manage Passwords” button styling (for Hidden) */
     #managePasswordsBtn {
       margin-top: 15px;
       padding: 8px 12px;
@@ -37,7 +37,23 @@
       background-color: #444;
     }
 
-    /* Modal: Manage Passwords */
+    /* “Folder Settings” button styling (for user folders) */
+    #folderSettingsBtn {
+      margin-top: 15px;
+      margin-left: 10px;
+      padding: 8px 12px;
+      background-color: #333;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #folderSettingsBtn:hover {
+      background-color: #444;
+    }
+
+    /* Modal: Manage Passwords (Hidden) */
     #manageModal {
       position: fixed;
       top: 0;
@@ -118,6 +134,88 @@
     #manageModalContent .delete-secondary-btn:hover {
       background-color: #666;
     }
+
+    /* Modal: Folder Settings (user‐created folders) */
+    #folderSettingsModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1700;
+    }
+    #folderSettingsContent {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      width: 90%;
+      max-width: 400px;
+      color: #f0f0f0;
+    }
+    #folderSettingsContent h2 {
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+    #folderSettingsContent label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+    #folderSettingsContent input {
+      width: 100%;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 5px;
+      color: #fff;
+      padding: 8px;
+      margin-bottom: 10px;
+      transition: border 0.2s;
+    }
+    #folderSettingsContent input:focus {
+      border-color: #555;
+      outline: none;
+    }
+    #folderSettingsContent .modal-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    #folderSettingsContent .modal-buttons button {
+      flex: 1;
+      margin: 0 6px;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #333;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    #folderSettingsContent .modal-buttons button:hover {
+      background-color: #444;
+    }
+    #folderSettingsContent .danger:hover {
+      background-color: red;
+    }
+    #folderSettingsContent .sectionDivider {
+      height: 1px;
+      background-color: #444;
+      margin: 15px 0;
+    }
+    #folderSettingsContent .delete-folder-btn {
+      background-color: #555;
+      margin-top: 10px;
+    }
+    #folderSettingsContent .delete-folder-btn:hover {
+      background-color: #666;
+    }
   </style>
 </head>
 <body>
@@ -137,10 +235,13 @@
   <div class="main">
     <h1 id="folderTitle">Loading...</h1>
 
-    <!-- “Manage Passwords” (only shown when inside Hidden folder) -->
+    <!-- “Manage Passwords” (only shown when inside Hidden) -->
     <button id="managePasswordsBtn" class="hidden">Manage Passwords</button>
 
-    <!-- Form to add a new link (hidden when in Hidden folder until unlocked) -->
+    <!-- “Folder Settings” (shown when inside any user‐created folder) -->
+    <button id="folderSettingsBtn" class="hidden">Folder Settings</button>
+
+    <!-- Form to add a new link (hidden when in Hidden until unlocked) -->
     <div id="linkFormContainer">
       <form id="linkForm">
         <input type="text" id="linkName" placeholder="Website Name" required>
@@ -269,7 +370,29 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
+  <!-- =============================
+       MODAL: FOLDER SETTINGS (user folders)
+       ============================= -->
+  <div id="folderSettingsModal">
+    <div id="folderSettingsContent">
+      <h2>Folder Settings</h2>
+
+      <!-- Password Section for user folder -->
+      <label for="folderNewPwd">Folder Password (optional)</label>
+      <input type="password" id="folderNewPwd" placeholder="Enter or change password">
+
+      <div class="modal-buttons">
+        <button onclick="cancelFolderSettings()">Cancel</button>
+        <button onclick="handleFolderPassword()">Save Password</button>
+      </div>
+
+      <div class="sectionDivider"></div>
+
+      <!-- Delete Folder Button (only for user folder) -->
+      <button class="delete-folder-btn danger" onclick="handleDeleteFolderFromSettings()">Delete Folder</button>
     </div>
   </div>
 
@@ -285,7 +408,9 @@
     // Each folder: { id: string, name: string, isHidden: boolean }
     // Each link:   { id: string, folderId: string, name: string,
     //               url: string, description: string, color: string }
-    // localStorage keys: 'folders', 'links', 'hiddenPassword1', 'hiddenPassword2'
+    // localStorage keys:
+    //   'folders', 'links', 'hiddenPassword1', 'hiddenPassword2',
+    //   'folderPassword_<folderId>'
 
     const DEFAULT_FOLDER_NAME = 'General';
     const HIDDEN_FOLDER_NAME  = 'Hidden';
@@ -294,10 +419,10 @@
     let links   = [];           // Array of link objects
     let currentFolderId = null; // ID of the folder currently open
 
-    // Modal‐related state
-    let pendingDeleteLinkId     = null;
-    let pendingMoveLinkId       = null;
-    let pendingColorLinkId      = null;
+    // Modal‐related state (links)
+    let pendingDeleteLinkId       = null;
+    let pendingMoveLinkId         = null;
+    let pendingColorLinkId        = null;
     let pendingMoveTargetFolderId = null;
 
     // Hidden‐folder password state
@@ -320,40 +445,45 @@
     ];
 
     // DOM references
-    const folderListEl       = document.getElementById('folderList');
-    const addFolderBtn       = document.getElementById('addFolderBtn');
-    const folderTitleEl      = document.getElementById('folderTitle');
-    const linkFormContainer  = document.getElementById('linkFormContainer');
-    const linkForm           = document.getElementById('linkForm');
-    const linkListEl         = document.getElementById('linkList');
-    const colorFilterEl      = document.getElementById('colorFilter');
-    const managePasswordsBtn = document.getElementById('managePasswordsBtn');
+    const folderListEl         = document.getElementById('folderList');
+    const addFolderBtn         = document.getElementById('addFolderBtn');
+    const folderTitleEl        = document.getElementById('folderTitle');
+    const linkFormContainer    = document.getElementById('linkFormContainer');
+    const linkForm             = document.getElementById('linkForm');
+    const linkListEl           = document.getElementById('linkList');
+    const colorFilterEl        = document.getElementById('colorFilter');
+    const managePasswordsBtn   = document.getElementById('managePasswordsBtn');
+    const folderSettingsBtn    = document.getElementById('folderSettingsBtn');
 
-    const contextMenu        = document.getElementById('contextMenu');
-    const ctxMove            = document.getElementById('ctxMove');
-    const ctxShare           = document.getElementById('ctxShare');
-    const ctxColor           = document.getElementById('ctxColor');
-    const ctxDelete          = document.getElementById('ctxDelete');
+    const contextMenu          = document.getElementById('contextMenu');
+    const ctxMove              = document.getElementById('ctxMove');
+    const ctxShare             = document.getElementById('ctxShare');
+    const ctxColor             = document.getElementById('ctxColor');
+    const ctxDelete            = document.getElementById('ctxDelete');
 
-    const deleteModal        = document.getElementById('deleteModal');
-    const passwordModal      = document.getElementById('passwordModal');
-    const pwdInput           = document.getElementById('pwdInput');
-    const pwdError           = document.getElementById('pwdError');
+    const deleteModal          = document.getElementById('deleteModal');
+    const passwordModal        = document.getElementById('passwordModal');
+    const pwdInput             = document.getElementById('pwdInput');
+    const pwdError             = document.getElementById('pwdError');
 
-    const moveModal          = document.getElementById('moveModal');
-    const folderOptionsEl    = document.getElementById('folderOptions');
+    const moveModal            = document.getElementById('moveModal');
+    const folderOptionsEl      = document.getElementById('folderOptions');
 
-    const colorModal         = document.getElementById('colorModal');
-    const colorGrid          = document.getElementById('colorGrid');
+    const colorModal           = document.getElementById('colorModal');
+    const colorGrid            = document.getElementById('colorGrid');
 
-    const manageModal        = document.getElementById('manageModal');
-    const currentPrimaryEl   = document.getElementById('currentPrimary');
-    const newPrimaryEl       = document.getElementById('newPrimary');
-    const setSecondaryDiv    = document.getElementById('setSecondaryDiv');
-    const editSecondaryDiv   = document.getElementById('editSecondaryDiv');
-    const newSecondaryEl     = document.getElementById('newSecondary');
-    const currentSecondaryEl = document.getElementById('currentSecondary');
-    const newSecondaryEditEl = document.getElementById('newSecondaryEdit');
+    const manageModal          = document.getElementById('manageModal');
+    const currentPrimaryEl     = document.getElementById('currentPrimary');
+    const newPrimaryEl         = document.getElementById('newPrimary');
+    const setSecondaryDiv      = document.getElementById('setSecondaryDiv');
+    const editSecondaryDiv     = document.getElementById('editSecondaryDiv');
+    const newSecondaryEl       = document.getElementById('newSecondary');
+    const currentSecondaryEl   = document.getElementById('currentSecondary');
+    const newSecondaryEditEl   = document.getElementById('newSecondaryEdit');
+
+    const folderSettingsModal  = document.getElementById('folderSettingsModal');
+    const folderSettingsContent= document.getElementById('folderSettingsContent');
+    const folderNewPwdEl       = document.getElementById('folderNewPwd');
 
 
     //───────────────────────────────────────────────────────────────────────────
@@ -375,7 +505,7 @@
         const hidId = (Date.now() + 1).toString();
         folders = [
           { id: genId, name: DEFAULT_FOLDER_NAME, isHidden: false },
-          { id: hidId, name: HIDDEN_FOLDER_NAME, isHidden: true }
+          { id: hidId, name: HIDDEN_FOLDER_NAME,  isHidden: true  }
         ];
         saveFolders();
       }
@@ -400,10 +530,10 @@
         const li = document.createElement('li');
         li.dataset.folderId = folder.id;
 
-        // Text + lock emoji if hidden
+        // Display name + lock if Hidden
         li.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
 
-        // If this is currently selected, highlight it
+        // Highlight if currently selected
         if (folder.id === currentFolderId) {
           li.classList.add('selected');
         }
@@ -411,19 +541,7 @@
         // Click to select
         li.onclick = () => selectFolder(folder.id);
 
-        // If folder is neither General nor Hidden, add a delete icon
-        if (!folder.isHidden && folder.name !== DEFAULT_FOLDER_NAME) {
-          const delSpan = document.createElement('span');
-          delSpan.className = 'folder-delete-icon';
-          delSpan.textContent = '🗑️';
-          delSpan.title = 'Delete folder';
-          delSpan.onclick = e => {
-            e.stopPropagation();
-            deleteFolder(folder.id);
-          };
-          li.appendChild(delSpan);
-        }
-
+        // No delete icon in sidebar anymore
         folderListEl.appendChild(li);
       });
     }
@@ -441,26 +559,6 @@
       saveFolders();
       renderFolderList();
     };
-
-    function deleteFolder(folderId) {
-      const folder = folders.find(f => f.id === folderId);
-      if (!folder) return;
-      const confirmDel = confirm(`Delete folder "${folder.name}" and all its links? This cannot be undone.`);
-      if (!confirmDel) return;
-      // Remove the folder
-      folders = folders.filter(f => f.id !== folderId);
-      saveFolders();
-      // Remove any links in that folder
-      links = links.filter(l => l.folderId !== folderId);
-      saveLinks();
-      // If the deleted folder was open, switch to General
-      if (currentFolderId === folderId) {
-        const gen = folders.find(f => !f.isHidden);
-        currentFolderId = gen.id;
-      }
-      renderFolderList();
-      openFolder(currentFolderId);
-    }
 
 
     //───────────────────────────────────────────────────────────────────────────
@@ -492,12 +590,21 @@
       const folder = folders.find(f => f.id === folderId);
 
       folderTitleEl.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
-      // Show or hide “Manage Passwords” button
+
+      // Show or hide “Manage Passwords” (only for Hidden)
       if (folder.isHidden) {
         managePasswordsBtn.classList.remove('hidden');
       } else {
         managePasswordsBtn.classList.add('hidden');
       }
+
+      // Show or hide “Folder Settings” (only for user‐created, not General, not Hidden)
+      if (!folder.isHidden && folder.name !== DEFAULT_FOLDER_NAME) {
+        folderSettingsBtn.classList.remove('hidden');
+      } else {
+        folderSettingsBtn.classList.add('hidden');
+      }
+
       linkFormContainer.classList.remove('hidden');
       renderLinks();
       renderFolderList();
@@ -512,7 +619,7 @@
       passwordMode = mode; // 'setHiddenPrimary', 'verifyHiddenPrimary', 'verifyHiddenSecondary'
       pwdInput.value = '';
       pwdError.textContent = '';
-      pendingMoveTargetFolderId = folderId; // which hidden folder to open
+      pendingMoveTargetFolderId = folderId; // which hidden to open
 
       if (mode === 'setHiddenPrimary') {
         document.getElementById('pwdModalTitle').textContent = 'Create Primary Password for Hidden';
@@ -550,7 +657,7 @@
           // Check if secondary exists
           const stored2 = localStorage.getItem('hiddenPassword2');
           if (stored2) {
-            // Prompt for secondary now
+            // Prompt for secondary
             passwordMode = 'verifyHiddenSecondary';
             pwdInput.value = '';
             pwdError.textContent = '';
@@ -558,7 +665,7 @@
             pwdInput.focus();
             return;
           }
-          // No secondary: open directly
+          // No secondary → open
           passwordModal.style.display = 'none';
           openFolder(pendingMoveTargetFolderId || folders.find(f => f.isHidden).id);
         } else {
@@ -586,7 +693,7 @@
       passwordMode = '';
     }
 
-    // Pressing Enter inside password input
+    // Pressing Enter in password input
     pwdInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -594,7 +701,7 @@
       }
     });
 
-    // Clicking outside or pressing Escape
+    // Close on clicking outside or Escape
     window.addEventListener('click', e => {
       if (e.target === passwordModal) cancelPassword();
     });
@@ -815,7 +922,7 @@
         return;
       }
 
-      // Otherwise, move immediately
+      // Otherwise, move
       moveLinkToFolder(pendingMoveLinkId, targetFolderId);
       closeMoveModal();
     }
@@ -880,13 +987,11 @@
 
 
     //───────────────────────────────────────────────────────────────────────────
-    // MANAGE PASSWORDS MODAL
+    // MANAGE PASSWORDS MODAL (Hidden)
     //───────────────────────────────────────────────────────────────────────────
-    // Open when “Manage Passwords” is clicked
     managePasswordsBtn.onclick = () => openManageModal();
 
     function openManageModal() {
-      // Show/hide appropriate sections depending on whether secondary exists
       const sec = localStorage.getItem('hiddenPassword2');
       if (sec) {
         setSecondaryDiv.classList.add('hidden');
@@ -895,10 +1000,9 @@
         setSecondaryDiv.classList.remove('hidden');
         editSecondaryDiv.classList.add('hidden');
       }
-      // Clear inputs
-      currentPrimaryEl.value = '';
-      newPrimaryEl.value     = '';
-      newSecondaryEl.value   = '';
+      currentPrimaryEl.value   = '';
+      newPrimaryEl.value       = '';
+      newSecondaryEl.value     = '';
       currentSecondaryEl.value = '';
       newSecondaryEditEl.value = '';
       manageModal.style.display = 'flex';
@@ -976,10 +1080,70 @@
 
 
     //───────────────────────────────────────────────────────────────────────────
+    // FOLDER SETTINGS MODAL (user folders)
+    //───────────────────────────────────────────────────────────────────────────
+    folderSettingsBtn.onclick = () => openFolderSettings();
+
+    function openFolderSettings() {
+      // Only for user folder (not General, not Hidden)
+      folderNewPwdEl.value = '';
+      folderSettingsModal.style.display = 'flex';
+    }
+
+    function cancelFolderSettings() {
+      folderSettingsModal.style.display = 'none';
+    }
+
+    function handleFolderPassword() {
+      const val = folderNewPwdEl.value.trim();
+      if (val) {
+        // Set/change password
+        localStorage.setItem(`folderPassword_${currentFolderId}`, val);
+        alert('Folder password saved.');
+      } else {
+        // Empty means remove
+        localStorage.removeItem(`folderPassword_${currentFolderId}`);
+        alert('Folder password removed.');
+      }
+      cancelFolderSettings();
+    }
+
+    function handleDeleteFolderFromSettings() {
+      const folder = folders.find(f => f.id === currentFolderId);
+      if (!folder) return;
+      const confirmDel = confirm(`Permanently delete folder "${folder.name}" and all its links?`);
+      if (!confirmDel) return;
+      // Delete folder and its links
+      folders = folders.filter(f => f.id !== currentFolderId);
+      saveFolders();
+      links = links.filter(l => l.folderId !== currentFolderId);
+      saveLinks();
+      // Remove any password
+      localStorage.removeItem(`folderPassword_${currentFolderId}`);
+      // Switch to General
+      const gen = folders.find(f => !f.isHidden);
+      currentFolderId = gen.id;
+      renderFolderList();
+      openFolder(currentFolderId);
+      cancelFolderSettings();
+    }
+
+    window.addEventListener('click', e => {
+      if (e.target === folderSettingsModal) cancelFolderSettings();
+    });
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && folderSettingsModal.style.display === 'flex') {
+        cancelFolderSettings();
+      }
+    });
+
+
+    //───────────────────────────────────────────────────────────────────────────
     // INITIAL SETUP & ENTRY POINT
     //───────────────────────────────────────────────────────────────────────────
     function init() {
       loadData();
+      // By default, open “General” folder
       const gen = folders.find(f => !f.isHidden);
       if (gen) currentFolderId = gen.id;
       renderFolderList();
@@ -987,6 +1151,7 @@
     }
 
     init();
+
   </script>
 </body>
 </html>
