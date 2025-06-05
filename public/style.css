@@ -290,13 +290,20 @@ body {
   background-color: #444;
 }
 
-.modal-buttons .danger:hover {
-  background-color: red;
+/* ---------- */
+/* DELETE BUTTONS (turn red on hover) */
+.modal-buttons .danger,
+.delete-folder-btn {
+  background-color: #a00;
+  color: #fff;
 }
 
-/* ==========================
-   Modal: Password Prompt
-   ========================== */
+.modal-buttons .danger:hover,
+.delete-folder-btn:hover {
+  background-color: red;
+}
+/* ---------- */
+
 #passwordModal {
   position: fixed;
   top: 0;
