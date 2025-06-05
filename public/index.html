@@ -982,7 +982,6 @@
     //───────────────────────────────────────────────────────────────────────────
     function init() {
       loadData();
-      // By default, open “General” folder
       const gen = folders.find(f => !f.isHidden);
       if (gen) currentFolderId = gen.id;
       renderFolderList();
