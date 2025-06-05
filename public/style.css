@@ -451,3 +451,9 @@ button.delete-folder-btn:hover {
 .hidden {
   display: none !important;
 }
+
+.link-info p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
