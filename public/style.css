@@ -292,15 +292,22 @@ body {
 
 /* ---------- */
 /* DELETE BUTTONS (turn red on hover) */
-.modal-buttons .danger,
-.delete-folder-btn {
+button.danger {
   background-color: #a00;
   color: #fff;
+  transition: background 0.2s;
+}
+button.danger:hover {
+  background-color: red !important;
 }
 
-.modal-buttons .danger:hover,
-.delete-folder-btn:hover {
-  background-color: red;
+button.delete-folder-btn {
+  background-color: #a00;
+  color: #fff;
+  transition: background 0.2s;
+}
+button.delete-folder-btn:hover {
+  background-color: red !important;
 }
 /* ---------- */
 
