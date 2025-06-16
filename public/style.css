@@ -485,9 +485,6 @@ button.delete-folder-btn:hover {
   transform: scale(1.1);
 }
 
-/* =========================
-   Miscellaneous Styles
-   ========================= */
 .hidden {
   display: none !important;
 }
