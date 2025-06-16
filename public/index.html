@@ -611,7 +611,6 @@
     function submitPassword() {
       const val = pwdInput.value.trim();
 
-      // 1) Setting primary for first time
       if (passwordMode === 'setHiddenPrimary') {
         if (val.length < 3) {
           pwdError.textContent = 'Password must be at least 3 characters.';
