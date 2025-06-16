@@ -785,7 +785,6 @@
       contextMenu.style.display = 'block';
     }
 
-    // Hide when clicking outside
     document.addEventListener('click', e => {
       if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
         contextMenu.style.display = 'none';
@@ -804,7 +803,6 @@
       showColorModal(pendingColorLinkId);
     };
 
-    // Share by Email
     ctxShare.onclick = () => {
       contextMenu.style.display = 'none';
       const link = links.find(l => l.id === pendingMoveLinkId);
@@ -815,7 +813,6 @@
       }
     };
 
-    // Delete Link
     ctxDelete.onclick = () => {
       contextMenu.style.display = 'none';
       openDeleteModal();
