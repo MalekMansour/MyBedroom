@@ -638,7 +638,6 @@
             pwdInput.focus();
             return;
           }
-          // No secondary → open
           passwordModal.style.display = 'none';
           openFolder(pendingMoveTargetFolderId || folders.find(f => f.isHidden).id);
         } else {
@@ -647,7 +646,6 @@
         return;
       }
 
-      // 3) Verifying secondary
       if (passwordMode === 'verifyHiddenSecondary') {
         const stored2 = localStorage.getItem('hiddenPassword2');
         if (val === stored2) {
