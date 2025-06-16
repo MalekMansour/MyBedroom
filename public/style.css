@@ -185,6 +185,13 @@ body {
   word-break: break-all;
 }
 
+/* Prevent description from stretching */
+.link-info p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ====================
    Three-Dots Menu Icon
    ==================== */
@@ -202,6 +209,38 @@ body {
 .menu-icon:hover {
   background-color: #333;
   color: #fff;
+}
+
+/* ========================
+   Preview Icon
+   ======================== */
+.preview-icon {
+  font-size: 16px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px 6px;
+  margin-left: 6px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.preview-icon:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Preview container */
+.link-preview {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.link-preview iframe {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: #fff;
 }
 
 /* ========================
@@ -290,8 +329,7 @@ body {
   background-color: #444;
 }
 
-/* ---------- */
-/* DELETE BUTTONS (turn red on hover) */
+/* Delete‐style buttons red on hover */
 button.danger {
   background-color: #a00;
   color: #fff;
@@ -309,8 +347,10 @@ button.delete-folder-btn {
 button.delete-folder-btn:hover {
   background-color: red !important;
 }
-/* ---------- */
 
+/* =========================
+   Modal: Password Prompt
+   ========================= */
 #passwordModal {
   position: fixed;
   top: 0;
@@ -450,10 +490,4 @@ button.delete-folder-btn:hover {
    ========================= */
 .hidden {
   display: none !important;
-}
-
-.link-info p {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
