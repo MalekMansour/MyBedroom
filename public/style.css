@@ -185,16 +185,12 @@ body {
   word-break: break-all;
 }
 
-/* Prevent description from stretching */
 .link-info p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ====================
-   Three-Dots Menu Icon
-   ==================== */
 .menu-icon {
   font-size: 18px;
   color: #aaa;
