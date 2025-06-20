@@ -18,7 +18,7 @@ A client-side link manager that lets you organize, tag, filter, preview and secu
 
 - **Color Tags & Filtering**  
   - 12 named colors to tag each link  
-  - Filter by one or more colors in the dropdown  
+  - Filter by one color in the dropdown  
 
 - **Search**  
   - Live “search as you type” by title
