@@ -1,17 +1,24 @@
 {
   "name": "mybedroom",
-  "version": "1.0.0",
-  "description": "- React\r - TypeScript",
-  "main": "server.js",
+  "version": "2.1.1",
+  "description": "MyBedroom URL manager",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "http-server ./ -p 8080 --silent",
+    "dev": "live-server --port=8080 --no-browser",
+    "build": "echo \"Nothing to build — static app.\""
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "static",
+    "html",
+    "css",
+    "links",
+    "manager"
+  ],
+  "author": "Malek Mansour",
   "license": "ISC",
-  "dependencies": {
-    "express": "^5.1.0",
-    "multer": "^2.0.0"
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.1"
   }
 }
