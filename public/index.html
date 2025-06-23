@@ -376,19 +376,15 @@
     let links   = [];           
     let currentFolderId = null; 
 
-    // Modal‐related state (links)
     let pendingDeleteLinkId       = null;
     let pendingMoveLinkId         = null;
     let pendingColorLinkId        = null;
     let pendingMoveTargetFolderId = null;
 
-    // Hidden‐folder password state
     let passwordMode = ''; 
 
-    // Folder deletion: store the to‐be‐deleted folderId
     let pendingDeleteFolderId = null;
 
-    // 12‐color palette with names
     const COLOR_PALETTE = [
       { name: 'Red Light',       hex: '#D71313' },
       { name: 'Crimson',         hex: '#BE3144' },
