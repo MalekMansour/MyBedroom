@@ -476,7 +476,6 @@
         // Display name + lock emoji if Hidden
         li.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
 
-        // Highlight if currently selected
         if (folder.id === currentFolderId) {
           li.classList.add('selected');
         }
