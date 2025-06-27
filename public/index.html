@@ -445,7 +445,6 @@
       links   = JSON.parse(localStorage.getItem('links')   || 'null');
 
       if (!folders) {
-        // First‐time: create “General” and “Hidden” folders
         const genId = Date.now().toString();
         const hidId = (Date.now() + 1).toString();
         folders = [
