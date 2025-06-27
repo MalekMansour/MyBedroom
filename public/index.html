@@ -489,7 +489,6 @@
     addFolderBtn.onclick = () => {
       const name = prompt('Enter new folder name:').trim();
       if (!name) return;
-      // Cannot name a folder “Hidden”
       if (name.toLowerCase() === HIDDEN_FOLDER_NAME.toLowerCase()) {
         openInfoModal(`"${HIDDEN_FOLDER_NAME}" is reserved.`);
         return;
