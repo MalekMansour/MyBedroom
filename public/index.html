@@ -507,15 +507,12 @@
       const folder = folders.find(f => f.id === folderId);
       if (!folder) return;
 
-      // If this is Hidden, handle two‐step password
       if (folder.isHidden) {
         const pwd1 = localStorage.getItem('hiddenPassword1');
         if (!pwd1) {
-          // No primary yet → set it
           showPasswordModal('setHiddenPrimary', folderId);
           return;
         }
-        // Prompt for primary verification
         showPasswordModal('verifyHiddenPrimary', folderId);
         return;
       }
