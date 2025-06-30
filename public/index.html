@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>MyBedroom</title>
 
+  <!-- Favicon / Taskbar icons -->
   <link rel="icon" href="/Icon/mybedroom.ico" type="image/x-icon">
   <link rel="shortcut icon" href="/Icon/mybedroom.ico" type="image/x-icon">
   <link rel="icon" href="/Icon/mybedroom.png" type="image/png" sizes="32x32">
@@ -21,12 +22,10 @@
       margin-bottom: 15px;
       position: relative;
     }
-
     .header h1 {
       margin: 0;
       font-size: 1.8rem;
     }
-
     #managePasswordsBtn,
     #folderSettingsBtn {
       margin-left: 10px;
@@ -45,13 +44,10 @@
     .hidden {
       display: none !important;
     }
-
     .modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background-color: rgba(0,0,0,0.75);
       display: none;
       justify-content: center;
@@ -127,7 +123,6 @@
       background-color: #444;
       margin: 15px 0;
     }
-
     #infoModalContent p {
       text-align: center;
       margin-bottom: 15px;
@@ -149,20 +144,15 @@
 </head>
 <body>
 
-  <!-- =====================
-       SIDEBAR (folders)
-       ===================== -->
+  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Folders</h2>
     <ul id="folderList"></ul>
     <button id="addFolderBtn">+ Add Folder</button>
   </div>
 
-  <!-- =====================
-       MAIN CONTENT AREA
-       ===================== -->
+  <!-- Main Content -->
   <div class="main">
-    <!-- Header: Title + (Manage/Settings) buttons -->
     <div class="header">
       <h1 id="folderTitle">Loading...</h1>
       <div>
@@ -171,7 +161,6 @@
       </div>
     </div>
 
-    <!-- Form to add a new link (hidden for Hidden until unlocked) -->
     <div id="linkFormContainer">
       <form id="linkForm">
         <input type="text" id="linkName" placeholder="Website Name" required>
@@ -181,18 +170,15 @@
       </form>
     </div>
 
-     
     <div id="filterContainer">
       <label for="colorFilter">Filter by Color:</label>
-      <select id="colorFilter">
-        <option value="">All</option>
-      </select>
+      <select id="colorFilter"><option value="">All</option></select>
     </div>
 
     <div id="linkList"></div>
   </div>
 
-
+  <!-- Context Menu -->
   <div id="contextMenu" class="context-menu">
     <ul>
       <li id="ctxMove">Move to Folder…</li>
@@ -202,11 +188,9 @@
     </ul>
   </div>
 
-  <!-- =========================
-       MODAL: DELETE LINK
-       ========================= -->
+  <!-- Delete Link Modal -->
   <div id="deleteModal" class="modal">
-    <div id="deleteModalContent" class="modal-content">
+    <div class="modal-content">
       <h2>Delete This Link?</h2>
       <p>Are you sure you want to permanently delete this link? This cannot be undone.</p>
       <div class="modal-buttons">
@@ -216,11 +200,9 @@
     </div>
   </div>
 
-  <!-- ======================
-       MODAL: PASSWORD PROMPT (Hidden)
-       ====================== -->
+  <!-- Password Prompt Modal -->
   <div id="passwordModal" class="modal">
-    <div id="passwordModalContent" class="modal-content">
+    <div class="modal-content">
       <h2 id="pwdModalTitle">Enter Password</h2>
       <input type="password" id="pwdInput" placeholder="Password">
       <p id="pwdError" style="color: red; margin-top: 6px;"></p>
@@ -231,11 +213,9 @@
     </div>
   </div>
 
-  <!-- =====================
-       MODAL: MOVE LINK
-       ===================== -->
+  <!-- Move Link Modal -->
   <div id="moveModal" class="modal">
-    <div id="moveModalContent" class="modal-content">
+    <div class="modal-content">
       <h2>Select a Destination Folder</h2>
       <ul id="folderOptions" style="list-style:none; max-height:200px; overflow-y:auto; padding:0; margin:10px 0;"></ul>
       <div class="modal-buttons">
@@ -244,11 +224,9 @@
     </div>
   </div>
 
-  <!-- =====================
-       MODAL: COLOR PICKER
-       ===================== -->
+  <!-- Color Picker Modal -->
   <div id="colorModal" class="modal">
-    <div id="colorModalContent" class="modal-content">
+    <div class="modal-content">
       <h2>Choose a Color Tag</h2>
       <div class="color-grid" id="colorGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:10px 0;"></div>
       <div class="modal-buttons">
@@ -257,14 +235,10 @@
     </div>
   </div>
 
-  <!-- =============================
-       MODAL: MANAGE PASSWORDS (Hidden)
-       ============================= -->
+  <!-- Manage Hidden Passwords Modal -->
   <div id="manageModal" class="modal">
-    <div id="manageModalContent" class="modal-content">
+    <div class="modal-content">
       <h2>Manage Hidden Passwords</h2>
-
-      <!-- Change Primary Password -->
       <label for="currentPrimary">Current Primary Password</label>
       <input type="password" id="currentPrimary" placeholder="Current password">
       <label for="newPrimary">New Primary Password</label>
@@ -273,10 +247,7 @@
         <button onclick="cancelManage()">Cancel</button>
         <button class="danger" onclick="handleChangePrimary()">Change Primary</button>
       </div>
-
       <div class="sectionDivider"></div>
-
-      <!-- Secondary Password Section -->
       <div id="secondarySection">
         <div id="setSecondaryDiv">
           <label for="newSecondary">Set Secondary Password</label>
@@ -286,7 +257,6 @@
             <button onclick="handleSetSecondary()">Set Secondary</button>
           </div>
         </div>
-
         <div id="editSecondaryDiv" class="hidden">
           <label for="currentSecondary">Current Secondary Password</label>
           <input type="password" id="currentSecondary" placeholder="Current secondary">
@@ -301,24 +271,17 @@
     </div>
   </div>
 
-  <!-- =============================
-       MODAL: FOLDER SETTINGS (user folders)
-       ============================= -->
+  <!-- Folder Settings Modal -->
   <div id="folderSettingsModal" class="modal">
-    <div id="folderSettingsContent" class="modal-content">
+    <div class="modal-content">
       <h2>Folder Settings</h2>
-
-      <!-- Folder Password (optional) -->
       <label for="folderNewPwd">Folder Password (optional)</label>
       <input type="password" id="folderNewPwd" placeholder="Enter or change password">
       <div class="modal-buttons">
         <button onclick="cancelFolderSettings()">Cancel</button>
         <button onclick="handleFolderPassword()">Save Password</button>
       </div>
-
       <div class="sectionDivider"></div>
-
-      <!-- Delete Folder Confirmation -->
       <p style="margin-bottom:12px;">Delete this folder and all its links?</p>
       <div class="modal-buttons">
         <button onclick="cancelFolderSettings()">Cancel</button>
@@ -327,11 +290,9 @@
     </div>
   </div>
 
-  <!-- =============================
-       MODAL: FOLDER DELETE CONFIRM
-       ============================= -->
+  <!-- Folder Delete Confirm Modal -->
   <div id="folderDeleteConfirmModal" class="modal">
-    <div id="folderDeleteConfirmContent" class="modal-content">
+    <div class="modal-content">
       <h2>Confirm Folder Deletion</h2>
       <p id="folderDeleteConfirmText">Are you sure?</p>
       <div class="modal-buttons">
@@ -341,9 +302,7 @@
     </div>
   </div>
 
-  <!-- ======================
-       MODAL: INFO MESSAGE
-       ====================== -->
+  <!-- Info Modal -->
   <div id="infoModal" class="modal">
     <div id="infoModalContent" class="modal-content">
       <p id="infoMessage">Info goes here.</p>
@@ -351,789 +310,499 @@
     </div>
   </div>
 
-  <script>
+  <!-- Create Folder Modal -->
+  <div id="createFolderModal" class="modal">
+    <div class="modal-content">
+      <h2>Create New Folder</h2>
+      <label for="newFolderName">Folder Name</label>
+      <input type="text" id="newFolderName" placeholder="Enter folder name">
+      <p id="createFolderError" style="color: red; margin-top: 6px;"></p>
+      <div class="modal-buttons">
+        <button onclick="cancelCreateFolder()">Cancel</button>
+        <button onclick="confirmCreateFolder()">Create</button>
+      </div>
+    </div>
+  </div>
 
+  <script>
     const DEFAULT_FOLDER_NAME = 'General';
     const HIDDEN_FOLDER_NAME  = 'Hidden';
-
-    let folders = [];           
-    let links   = [];           
-    let currentFolderId = null; 
-
-    let pendingDeleteLinkId       = null;
-    let pendingMoveLinkId         = null;
-    let pendingColorLinkId        = null;
-    let pendingMoveTargetFolderId = null;
-
-    let passwordMode = ''; 
-
-    let pendingDeleteFolderId = null;
+    let folders = [], links = [], currentFolderId = null;
+    let pendingDeleteLinkId = null, pendingMoveLinkId = null, pendingColorLinkId = null, pendingMoveTargetFolderId = null;
+    let passwordMode = '', pendingDeleteFolderId = null;
 
     const COLOR_PALETTE = [
-      { name: 'Red Light',       hex: '#D71313' },
-      { name: 'Crimson',         hex: '#BE3144' },
-      { name: 'Hot Pink',        hex: '#FF55BB' },
-      { name: 'Soft Pink',       hex: '#EC7FA9' },
-      { name: 'Platinum',        hex: '#7F55B1' },
-      { name: 'Lilac',           hex: '#6F69AC' },
-      { name: 'Midnight',        hex: '#2D336B' },
-      { name: 'Electric',        hex: '#3A59D1' },
-      { name: 'Forest',          hex: '#169976' },
-      { name: 'Sage',            hex: '#6A9C89' },
-      { name: 'Pumpkin',         hex: '#E78B48' },
-      { name: 'Mustard',         hex: '#EFB036' }
+      { name: 'Red Light', hex: '#D71313' }, { name: 'Crimson', hex: '#BE3144' },
+      { name: 'Hot Pink', hex: '#FF55BB' }, { name: 'Soft Pink', hex: '#EC7FA9' },
+      { name: 'Platinum', hex: '#7F55B1' }, { name: 'Lilac', hex: '#6F69AC' },
+      { name: 'Midnight', hex: '#2D336B' }, { name: 'Electric', hex: '#3A59D1' },
+      { name: 'Forest', hex: '#169976' }, { name: 'Sage', hex: '#6A9C89' },
+      { name: 'Pumpkin', hex: '#E78B48' }, { name: 'Mustard', hex: '#EFB036' }
     ];
 
-    // DOM references
-    const folderListEl         = document.getElementById('folderList');
-    const addFolderBtn         = document.getElementById('addFolderBtn');
-    const folderTitleEl        = document.getElementById('folderTitle');
-    const linkFormContainer    = document.getElementById('linkFormContainer');
-    const linkForm             = document.getElementById('linkForm');
-    const linkListEl           = document.getElementById('linkList');
-    const colorFilterEl        = document.getElementById('colorFilter');
-    const managePasswordsBtn   = document.getElementById('managePasswordsBtn');
-    const folderSettingsBtn    = document.getElementById('folderSettingsBtn');
+    // DOM refs
+    const folderListEl       = document.getElementById('folderList');
+    const addFolderBtn       = document.getElementById('addFolderBtn');
+    const folderTitleEl      = document.getElementById('folderTitle');
+    const linkFormContainer  = document.getElementById('linkFormContainer');
+    const linkForm           = document.getElementById('linkForm');
+    const linkListEl         = document.getElementById('linkList');
+    const colorFilterEl      = document.getElementById('colorFilter');
+    const managePasswordsBtn = document.getElementById('managePasswordsBtn');
+    const folderSettingsBtn  = document.getElementById('folderSettingsBtn');
 
-    const contextMenu          = document.getElementById('contextMenu');
-    const ctxMove              = document.getElementById('ctxMove');
-    const ctxShare             = document.getElementById('ctxShare');
-    const ctxColor             = document.getElementById('ctxColor');
-    const ctxDelete            = document.getElementById('ctxDelete');
+    const contextMenu        = document.getElementById('contextMenu');
+    const ctxMove            = document.getElementById('ctxMove');
+    const ctxShare           = document.getElementById('ctxShare');
+    const ctxColor           = document.getElementById('ctxColor');
+    const ctxDelete          = document.getElementById('ctxDelete');
 
-    const deleteModal          = document.getElementById('deleteModal');
-    const passwordModal        = document.getElementById('passwordModal');
-    const pwdInput             = document.getElementById('pwdInput');
-    const pwdError             = document.getElementById('pwdError');
+    const deleteModal        = document.getElementById('deleteModal');
+    const passwordModal      = document.getElementById('passwordModal');
+    const pwdInput           = document.getElementById('pwdInput');
+    const pwdError           = document.getElementById('pwdError');
 
-    const moveModal            = document.getElementById('moveModal');
-    const folderOptionsEl      = document.getElementById('folderOptions');
+    const moveModal          = document.getElementById('moveModal');
+    const folderOptionsEl    = document.getElementById('folderOptions');
 
-    const colorModal           = document.getElementById('colorModal');
-    const colorGrid            = document.getElementById('colorGrid');
+    const colorModal         = document.getElementById('colorModal');
+    const colorGrid          = document.getElementById('colorGrid');
 
-    const manageModal          = document.getElementById('manageModal');
-    const currentPrimaryEl     = document.getElementById('currentPrimary');
-    const newPrimaryEl         = document.getElementById('newPrimary');
-    const setSecondaryDiv      = document.getElementById('setSecondaryDiv');
-    const editSecondaryDiv     = document.getElementById('editSecondaryDiv');
-    const newSecondaryEl       = document.getElementById('newSecondary');
-    const currentSecondaryEl   = document.getElementById('currentSecondary');
-    const newSecondaryEditEl   = document.getElementById('newSecondaryEdit');
+    const manageModal        = document.getElementById('manageModal');
+    const currentPrimaryEl   = document.getElementById('currentPrimary');
+    const newPrimaryEl       = document.getElementById('newPrimary');
+    const setSecondaryDiv    = document.getElementById('setSecondaryDiv');
+    const editSecondaryDiv   = document.getElementById('editSecondaryDiv');
+    const newSecondaryEl     = document.getElementById('newSecondary');
+    const currentSecondaryEl = document.getElementById('currentSecondary');
+    const newSecondaryEditEl = document.getElementById('newSecondaryEdit');
 
-    const folderSettingsModal  = document.getElementById('folderSettingsModal');
-    const folderNewPwdEl       = document.getElementById('folderNewPwd');
+    const folderSettingsModal      = document.getElementById('folderSettingsModal');
+    const folderNewPwdEl           = document.getElementById('folderNewPwd');
 
     const folderDeleteConfirmModal = document.getElementById('folderDeleteConfirmModal');
     const folderDeleteConfirmText  = document.getElementById('folderDeleteConfirmText');
 
-    const infoModal            = document.getElementById('infoModal');
-    const infoMessageEl        = document.getElementById('infoMessage');
+    const infoModal   = document.getElementById('infoModal');
+    const infoMessageEl = document.getElementById('infoMessage');
 
+    const createFolderModal = document.getElementById('createFolderModal');
+    const createFolderError = document.getElementById('createFolderError');
+    const newFolderNameInput = document.getElementById('newFolderName');
 
-    //───────────────────────────────────────────────────────────────────────────
-    // localStorage UTILITIES
-    //───────────────────────────────────────────────────────────────────────────
-    function saveFolders() {
-      localStorage.setItem('folders', JSON.stringify(folders));
-    }
-    function saveLinks() {
-      localStorage.setItem('links', JSON.stringify(links));
-    }
+    // localStorage helpers
+    function saveFolders() { localStorage.setItem('folders', JSON.stringify(folders)); }
+    function saveLinks()   { localStorage.setItem('links',   JSON.stringify(links)); }
     function loadData() {
       folders = JSON.parse(localStorage.getItem('folders') || 'null');
       links   = JSON.parse(localStorage.getItem('links')   || 'null');
-
       if (!folders) {
-        const genId = Date.now().toString();
-        const hidId = (Date.now() + 1).toString();
+        const genId = Date.now() + '';
+        const hidId = (Date.now()+1) + '';
         folders = [
           { id: genId, name: DEFAULT_FOLDER_NAME, isHidden: false },
           { id: hidId, name: HIDDEN_FOLDER_NAME,  isHidden: true  }
         ];
         saveFolders();
       }
-      if (!links) {
-        links = [];
-        saveLinks();
-      }
+      if (!links) { links = []; saveLinks(); }
     }
+    function genId() { return Date.now()+''+Math.floor(Math.random()*1000); }
 
-    function genId() {
-      return Date.now().toString() + Math.floor(Math.random() * 1000);
-    }
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // RENDER FOLDER LIST IN SIDEBAR
-    //───────────────────────────────────────────────────────────────────────────
+    // render folder list
     function renderFolderList() {
       folderListEl.innerHTML = '';
-      folders.forEach(folder => {
+      folders.forEach(f => {
         const li = document.createElement('li');
-        li.dataset.folderId = folder.id;
-
-        // Display name + lock emoji if Hidden
-        li.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
-
-        if (folder.id === currentFolderId) {
-          li.classList.add('selected');
-        }
-
-        li.onclick = () => selectFolder(folder.id);
-
+        li.textContent = f.name + (f.isHidden?' 🔒':'');
+        if (f.id===currentFolderId) li.classList.add('selected');
+        li.onclick = ()=>selectFolder(f.id);
         folderListEl.appendChild(li);
       });
     }
 
-    addFolderBtn.onclick = () => {
-      const name = prompt('Enter new folder name:').trim();
-      if (!name) return;
-      if (name.toLowerCase() === HIDDEN_FOLDER_NAME.toLowerCase()) {
-        openInfoModal(`"${HIDDEN_FOLDER_NAME}" is reserved.`);
+    // CREATE FOLDER modal callbacks
+    addFolderBtn.onclick = ()=>{
+      newFolderNameInput.value = '';
+      createFolderError.textContent = '';
+      createFolderModal.style.display = 'flex';
+    };
+    function cancelCreateFolder(){
+      createFolderModal.style.display='none';
+    }
+    function confirmCreateFolder(){
+      const name = newFolderNameInput.value.trim();
+      if (!name) {
+        createFolderError.textContent = 'Please enter a folder name.';
         return;
       }
-      const newId = genId();
-      folders.push({ id: newId, name, isHidden: false });
+      if (name.toLowerCase()===HIDDEN_FOLDER_NAME.toLowerCase()){
+        createFolderError.textContent = `"${HIDDEN_FOLDER_NAME}" is reserved.`;
+        return;
+      }
+      const id = genId();
+      folders.push({id, name, isHidden:false});
       saveFolders();
       renderFolderList();
-    };
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // SELECT & DISPLAY CURRENT FOLDER
-    //───────────────────────────────────────────────────────────────────────────
-    function selectFolder(folderId) {
-      const folder = folders.find(f => f.id === folderId);
-      if (!folder) return;
-
-      if (folder.isHidden) {
-        const pwd1 = localStorage.getItem('hiddenPassword1');
-        if (!pwd1) {
-          showPasswordModal('setHiddenPrimary', folderId);
-          return;
-        }
-        showPasswordModal('verifyHiddenPrimary', folderId);
-        return;
-      }
-
-      openFolder(folderId);
+      createFolderModal.style.display='none';
     }
 
-    function openFolder(folderId) {
+    // show folder
+    function selectFolder(folderId){
+      const folder = folders.find(f=>f.id===folderId);
+      if(!folder) return;
+      if(folder.isHidden){
+        const pwd1 = localStorage.getItem('hiddenPassword1');
+        if(!pwd1){ showPasswordModal('setHiddenPrimary',folderId); return; }
+        showPasswordModal('verifyHiddenPrimary',folderId);
+        return;
+      }
+      openFolder(folderId);
+    }
+    function openFolder(folderId){
       currentFolderId = folderId;
-      const folder = folders.find(f => f.id === folderId);
-
-      folderTitleEl.textContent = folder.name + (folder.isHidden ? ' 🔒' : '');
-
-      // Show or hide “Manage Passwords” (Hidden only)
-      if (folder.isHidden) {
-        managePasswordsBtn.classList.remove('hidden');
-      } else {
-        managePasswordsBtn.classList.add('hidden');
-      }
-
-      // Show or hide “Folder Settings” (user‐created, not General, not Hidden)
-      if (!folder.isHidden && folder.name !== DEFAULT_FOLDER_NAME) {
-        folderSettingsBtn.classList.remove('hidden');
-      } else {
-        folderSettingsBtn.classList.add('hidden');
-      }
-
+      const f = folders.find(x=>x.id===folderId);
+      folderTitleEl.textContent = f.name + (f.isHidden?' 🔒':'');
+      managePasswordsBtn.classList.toggle('hidden',!f.isHidden);
+      folderSettingsBtn.classList.toggle('hidden',f.isHidden||f.name===DEFAULT_FOLDER_NAME);
       linkFormContainer.classList.remove('hidden');
       renderLinks();
       renderFolderList();
       buildColorFilterOptions();
     }
 
-
-    //───────────────────────────────────────────────────────────────────────────
-    // PASSWORD MODAL (Two‐Step for Hidden Folder)
-    //───────────────────────────────────────────────────────────────────────────
-    function showPasswordModal(mode, folderId = null) {
-      passwordMode = mode; // 'setHiddenPrimary', 'verifyHiddenPrimary', 'verifyHiddenSecondary'
-      pwdInput.value = '';
-      pwdError.textContent = '';
-      pendingMoveTargetFolderId = folderId; // which hidden to open
-
-      if (mode === 'setHiddenPrimary') {
-        document.getElementById('pwdModalTitle').textContent = 'Create Primary Password for Hidden';
-      }
-      else if (mode === 'verifyHiddenPrimary') {
-        document.getElementById('pwdModalTitle').textContent = 'Enter Primary Password';
-      }
-      else if (mode === 'verifyHiddenSecondary') {
-        document.getElementById('pwdModalTitle').textContent = 'Enter Secondary Password';
-      }
-
-      passwordModal.style.display = 'flex';
+    // password modal logic
+    function showPasswordModal(mode, folderId=null){
+      passwordMode = mode;
+      pwdInput.value=''; pwdError.textContent='';
+      pendingMoveTargetFolderId = folderId;
+      const titles = {
+        setHiddenPrimary:   'Create Primary Password for Hidden',
+        verifyHiddenPrimary:'Enter Primary Password',
+        verifyHiddenSecondary:'Enter Secondary Password'
+      };
+      document.getElementById('pwdModalTitle').textContent = titles[mode];
+      passwordModal.style.display='flex';
       pwdInput.focus();
     }
-
-    function submitPassword() {
-      const val = pwdInput.value.trim();
-
-      if (passwordMode === 'setHiddenPrimary') {
-        if (val.length < 3) {
-          pwdError.textContent = 'Password must be at least 3 characters.';
-          return;
-        }
-        localStorage.setItem('hiddenPassword1', val);
-        passwordModal.style.display = 'none';
-        openFolder(pendingMoveTargetFolderId || folders.find(f => f.isHidden).id);
+    function cancelPassword(){
+      passwordModal.style.display='none';
+      pendingMoveTargetFolderId=null;
+      passwordMode='';
+    }
+    function submitPassword(){
+      const v = pwdInput.value.trim();
+      if(passwordMode==='setHiddenPrimary'){
+        if(v.length<3){ pwdError.textContent='Password must be at least 3 characters.'; return; }
+        localStorage.setItem('hiddenPassword1',v);
+        passwordModal.style.display='none';
+        openFolder(pendingMoveTargetFolderId||folders.find(f=>f.isHidden).id);
         return;
       }
-
-      if (passwordMode === 'verifyHiddenPrimary') {
-        const stored1 = localStorage.getItem('hiddenPassword1');
-        if (val === stored1) {
-          // Check if secondary exists
-          const stored2 = localStorage.getItem('hiddenPassword2');
-          if (stored2) {
-            // Prompt for secondary
-            passwordMode = 'verifyHiddenSecondary';
-            pwdInput.value = '';
-            pwdError.textContent = '';
-            document.getElementById('pwdModalTitle').textContent = 'Enter Secondary Password';
-            pwdInput.focus();
-            return;
-          }
-          passwordModal.style.display = 'none';
-          openFolder(pendingMoveTargetFolderId || folders.find(f => f.isHidden).id);
-        } else {
-          pwdError.textContent = 'Incorrect primary password.';
-        }
+      if(passwordMode==='verifyHiddenPrimary'){
+        const stored1=localStorage.getItem('hiddenPassword1');
+        if(v===stored1){
+          const stored2=localStorage.getItem('hiddenPassword2');
+          if(stored2){ passwordMode='verifyHiddenSecondary'; pwdInput.value=''; pwdError.textContent=''; document.getElementById('pwdModalTitle').textContent='Enter Secondary Password'; pwdInput.focus(); return; }
+          passwordModal.style.display='none';
+          openFolder(pendingMoveTargetFolderId||folders.find(f=>f.isHidden).id);
+        } else { pwdError.textContent='Incorrect primary password.'; }
         return;
       }
-
-      if (passwordMode === 'verifyHiddenSecondary') {
-        const stored2 = localStorage.getItem('hiddenPassword2');
-        if (val === stored2) {
-          passwordModal.style.display = 'none';
-          openFolder(pendingMoveTargetFolderId || folders.find(f => f.isHidden).id);
-        } else {
-          pwdError.textContent = 'Incorrect secondary password.';
-        }
-        return;
+      if(passwordMode==='verifyHiddenSecondary'){
+        const stored2=localStorage.getItem('hiddenPassword2');
+        if(v===stored2){
+          passwordModal.style.display='none';
+          openFolder(pendingMoveTargetFolderId||folders.find(f=>f.isHidden).id);
+        } else { pwdError.textContent='Incorrect secondary password.'; }
       }
     }
+    pwdInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();submitPassword();} });
+    window.addEventListener('click',e=>{ if(e.target===passwordModal) cancelPassword(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&passwordModal.style.display==='flex') cancelPassword(); });
 
-    function cancelPassword() {
-      passwordModal.style.display = 'none';
-      pendingMoveTargetFolderId = null;
-      passwordMode = '';
-    }
-
-    // Pressing Enter in password input
-    pwdInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        submitPassword();
-      }
-    });
-
-    // Close on clicking outside or Escape
-    window.addEventListener('click', e => {
-      if (e.target === passwordModal) cancelPassword();
-    });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && passwordModal.style.display === 'flex') {
-        cancelPassword();
-      }
-    });
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // ADDING NEW LINKS
-    //───────────────────────────────────────────────────────────────────────────
-    linkForm.onsubmit = e => {
+    // add links
+    linkForm.onsubmit=e=>{
       e.preventDefault();
-      if (!currentFolderId) return;
-      const name = document.getElementById('linkName').value.trim();
-      const url  = document.getElementById('linkURL').value.trim();
-      const desc = document.getElementById('linkDesc').value.trim();
-      if (!name || !url) return;
-
-      const newLink = {
-        id: genId(),
-        folderId: currentFolderId,
-        name,
-        url,
-        description: desc,
-        color: '' // no color by default
-      };
-      links.push(newLink);
+      if(!currentFolderId) return;
+      const n=document.getElementById('linkName').value.trim();
+      const u=document.getElementById('linkURL').value.trim();
+      const d=document.getElementById('linkDesc').value.trim();
+      if(!n||!u) return;
+      links.push({ id:genId(), folderId:currentFolderId, name:n, url:u, description:d, color:'' });
       saveLinks();
       linkForm.reset();
       renderLinks();
     };
 
-
-    //───────────────────────────────────────────────────────────────────────────
-    // RENDERING & FILTERING LINKS
-    //───────────────────────────────────────────────────────────────────────────
-    function buildColorFilterOptions() {
-      colorFilterEl.innerHTML = '<option value="">All</option>';
-      COLOR_PALETTE.forEach(colorObj => {
-        const opt = document.createElement('option');
-        opt.value = colorObj.hex;
-        opt.textContent = colorObj.name;
-        opt.style.backgroundColor = colorObj.hex;
-        opt.style.color = '#000';
-        colorFilterEl.appendChild(opt);
+    // filter & render
+    function buildColorFilterOptions(){
+      colorFilterEl.innerHTML='<option value="">All</option>';
+      COLOR_PALETTE.forEach(c=>{
+        const o=document.createElement('option');
+        o.value=c.hex; o.textContent=c.name;
+        o.style.backgroundColor=c.hex; o.style.color='#000';
+        colorFilterEl.appendChild(o);
       });
     }
-
-    colorFilterEl.onchange = () => {
-      renderLinks();
-    };
-
-    function renderLinks() {
-      linkListEl.innerHTML = '';
-      if (!currentFolderId) return;
-
-      const chosenColor = colorFilterEl.value;
-      const folderLinks = links
-        .filter(l => l.folderId === currentFolderId)
-        .filter(l => chosenColor === '' || l.color === chosenColor);
-
-      folderLinks.forEach(l => {
-        const item = document.createElement('div');
-        item.className = 'link-item';
-        item.style.backgroundColor = l.color || '#1b1b1b';
-
-        // Link info
-        const info = document.createElement('div');
-        info.className = 'link-info';
-        info.innerHTML = `
-          <h3><a href="${l.url}" target="_blank">${l.name}</a></h3>
-          <p>${l.description}</p>
-        `;
-
-        // Three-dots menu
-        const menuIcon = document.createElement('span');
-        menuIcon.className = 'menu-icon';
-        menuIcon.textContent = '⋮';
-        menuIcon.addEventListener('click', e => openContextMenu(e, l.id));
-
-        item.appendChild(info);
-        item.appendChild(menuIcon);
-        linkListEl.appendChild(item);
-      });
+    colorFilterEl.onchange=()=>renderLinks();
+    function renderLinks(){
+      linkListEl.innerHTML='';
+      if(!currentFolderId) return;
+      const chosen=colorFilterEl.value;
+      links.filter(l=>l.folderId===currentFolderId)
+           .filter(l=>!chosen||l.color===chosen)
+           .forEach(l=>{
+             const item=document.createElement('div');
+             item.className='link-item';
+             item.style.backgroundColor=l.color||'#1b1b1b';
+             const info=document.createElement('div');
+             info.className='link-info';
+             info.innerHTML=`<h3><a href="${l.url}" target="_blank">${l.name}</a></h3><p>${l.description}</p>`;
+             const mi=document.createElement('span');
+             mi.className='menu-icon'; mi.textContent='⋮';
+             mi.addEventListener('click',e=>openContextMenu(e,l.id));
+             item.appendChild(info);
+             item.appendChild(mi);
+             linkListEl.appendChild(item);
+           });
     }
 
-
-    //───────────────────────────────────────────────────────────────────────────
-    // CONTEXT MENU (⋮) FOR LINKS
-    //───────────────────────────────────────────────────────────────────────────
-    function openContextMenu(e, linkId) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      pendingMoveLinkId   = linkId;
-      pendingColorLinkId  = linkId;
-      pendingDeleteLinkId = linkId;
-
-      const menuWidth = 180;
-      let x = e.clientX - (menuWidth - 20);
-      if (x < 5) x = 5;
-      let y = e.clientY + 5;
-      contextMenu.style.top  = y + 'px';
-      contextMenu.style.left = x + 'px';
-      contextMenu.style.display = 'block';
+    // context menu...
+    function openContextMenu(e, linkId){
+      e.preventDefault(); e.stopPropagation();
+      pendingMoveLinkId=linkId; pendingColorLinkId=linkId; pendingDeleteLinkId=linkId;
+      const menuWidth=180;
+      let x=e.clientX-(menuWidth-20); if(x<5)x=5;
+      let y=e.clientY+5;
+      contextMenu.style.top=y+'px';
+      contextMenu.style.left=x+'px';
+      contextMenu.style.display='block';
     }
-
-    document.addEventListener('click', e => {
-      if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
-        contextMenu.style.display = 'none';
+    document.addEventListener('click',e=>{
+      if(contextMenu.style.display==='block'&&!contextMenu.contains(e.target)){
+        contextMenu.style.display='none';
       }
     });
-
-    // Move to Folder…
-    ctxMove.onclick = () => {
-      contextMenu.style.display = 'none';
-      showMoveModal(pendingMoveLinkId);
+    ctxMove.onclick=()=>{
+      contextMenu.style.display='none'; showMoveModal(pendingMoveLinkId);
     };
-
-    // Set Color Tag…
-    ctxColor.onclick = () => {
-      contextMenu.style.display = 'none';
-      showColorModal(pendingColorLinkId);
+    ctxColor.onclick=()=>{
+      contextMenu.style.display='none'; showColorModal(pendingColorLinkId);
     };
-
-    ctxShare.onclick = () => {
-      contextMenu.style.display = 'none';
-      const link = links.find(l => l.id === pendingMoveLinkId);
-      if (link) {
-        const subject = encodeURIComponent('Check out this link: ' + link.name);
-        const body = encodeURIComponent(`I thought you might like this:\n\n${link.name}\n${link.url}\n\n${link.description}`);
-        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    ctxShare.onclick=()=>{
+      contextMenu.style.display='none';
+      const l=links.find(x=>x.id===pendingMoveLinkId);
+      if(l){
+        const subj=encodeURIComponent('Check out this link: '+l.name);
+        const body=encodeURIComponent(`I thought you might like this:\n\n${l.name}\n${l.url}\n\n${l.description}`);
+        window.location.href=`mailto:?subject=${subj}&body=${body}`;
       }
     };
-
-    ctxDelete.onclick = () => {
-      contextMenu.style.display = 'none';
-      openDeleteModal();
+    ctxDelete.onclick=()=>{
+      contextMenu.style.display='none'; openDeleteModal();
     };
 
-
-    //───────────────────────────────────────────────────────────────────────────
-    // DELETE LINK MODAL LOGIC
-    //───────────────────────────────────────────────────────────────────────────
-    function openDeleteModal() {
-      deleteModal.style.display = 'flex';
-    }
-    function closeDeleteModal() {
-      deleteModal.style.display = 'none';
-    }
-    function confirmDelete() {
-      if (pendingDeleteLinkId) {
-        links = links.filter(l => l.id !== pendingDeleteLinkId);
-        saveLinks();
-        renderLinks();
+    // delete link modal
+    function openDeleteModal(){ deleteModal.style.display='flex'; }
+    function closeDeleteModal(){ deleteModal.style.display='none'; }
+    function confirmDelete(){
+      if(pendingDeleteLinkId){
+        links=links.filter(x=>x.id!==pendingDeleteLinkId);
+        saveLinks(); renderLinks();
       }
       closeDeleteModal();
     }
+    window.addEventListener('click',e=>{ if(e.target===deleteModal) closeDeleteModal(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&deleteModal.style.display==='flex') closeDeleteModal(); });
 
-    window.addEventListener('click', e => {
-      if (e.target === deleteModal) closeDeleteModal();
-    });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
-        closeDeleteModal();
-      }
-    });
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // MOVE LINK MODAL
-    //───────────────────────────────────────────────────────────────────────────
-    function showMoveModal(linkId) {
-      pendingMoveLinkId = linkId;
-      folderOptionsEl.innerHTML = '';
-      folders.forEach(f => {
-        const li = document.createElement('li');
-        li.style.padding = '8px';
-        li.style.cursor = 'pointer';
-        li.style.borderRadius = '5px';
-        li.style.transition = 'background 0.2s';
-        li.textContent = f.name + (f.isHidden ? ' 🔒' : '');
-        li.dataset.folderId = f.id;
-        li.onclick = () => attemptMoveLink(f.id);
-        li.onmouseover = () => (li.style.backgroundColor = '#333');
-        li.onmouseout = () => (li.style.backgroundColor = 'transparent');
+    // move link modal
+    function showMoveModal(linkId){
+      pendingMoveLinkId=linkId;
+      folderOptionsEl.innerHTML='';
+      folders.forEach(f=>{
+        const li=document.createElement('li');
+        li.style.padding='8px'; li.style.cursor='pointer';
+        li.style.borderRadius='5px'; li.style.transition='background 0.2s';
+        li.textContent=f.name+(f.isHidden?' 🔒':'');
+        li.onclick=()=>attemptMoveLink(f.id);
+        li.onmouseover=()=>li.style.backgroundColor='#333';
+        li.onmouseout=()=>li.style.backgroundColor='transparent';
         folderOptionsEl.appendChild(li);
       });
-      moveModal.style.display = 'flex';
+      moveModal.style.display='flex';
     }
-
-    function closeMoveModal() {
-      moveModal.style.display = 'none';
-      pendingMoveLinkId = null;
-      pendingMoveTargetFolderId = null;
-    }
-
-    function attemptMoveLink(targetFolderId) {
-      const target = folders.find(f => f.id === targetFolderId);
-      if (!target) return;
-
-      if (target.isHidden) {
-        // Moving into Hidden → require password
-        const stored1 = localStorage.getItem('hiddenPassword1');
-        if (!stored1) {
-          closeMoveModal();
-          showPasswordModal('setHiddenPrimary', targetFolderId);
-          return;
+    function closeMoveModal(){ moveModal.style.display='none'; pendingMoveLinkId=null; pendingMoveTargetFolderId=null; }
+    function attemptMoveLink(targetId){
+      const tgt=folders.find(x=>x.id===targetId);
+      if(!tgt)return;
+      if(tgt.isHidden){
+        const s1=localStorage.getItem('hiddenPassword1');
+        if(!s1){
+          closeMoveModal(); showPasswordModal('setHiddenPrimary',targetId); return;
         }
-        closeMoveModal();
-        passwordMode = 'verifyHiddenPrimary';
-        pendingMoveTargetFolderId = targetFolderId;
-        showPasswordModal('verifyHiddenPrimary', targetFolderId);
-        return;
+        closeMoveModal(); passwordMode='verifyHiddenPrimary'; pendingMoveTargetFolderId=targetId; showPasswordModal('verifyHiddenPrimary',targetId); return;
       }
-
-      // Otherwise, move
-      moveLinkToFolder(pendingMoveLinkId, targetFolderId);
-      closeMoveModal();
+      links.find(x=>x.id===pendingMoveLinkId).folderId=targetId;
+      saveLinks(); renderLinks(); closeMoveModal();
     }
+    window.addEventListener('click',e=>{ if(e.target===moveModal) closeMoveModal(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&moveModal.style.display==='flex') closeMoveModal(); });
 
-    function moveLinkToFolder(linkId, destFolderId) {
-      const idx = links.findIndex(l => l.id === linkId);
-      if (idx === -1) return;
-      links[idx].folderId = destFolderId;
-      saveLinks();
-      renderLinks();
-    }
-
-    window.addEventListener('click', e => {
-      if (e.target === moveModal) closeMoveModal();
-    });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && moveModal.style.display === 'flex') {
-        closeMoveModal();
-      }
-    });
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // COLOR PICKER MODAL
-    //───────────────────────────────────────────────────────────────────────────
-    function showColorModal(linkId) {
-      pendingColorLinkId = linkId;
-      colorGrid.innerHTML = '';
-      COLOR_PALETTE.forEach(colorObj => {
-        const cell = document.createElement('div');
-        cell.className = 'color-cell';
-        cell.style.backgroundColor = colorObj.hex;
-        cell.style.width = '50px';
-        cell.style.height = '50px';
-        cell.style.borderRadius = '4px';
-        cell.style.cursor = 'pointer';
-        cell.style.border = '2px solid #1e1e1e';
-        cell.style.transition = 'transform 0.1s';
-        cell.title = colorObj.name;
-        cell.onclick = () => selectColorForLink(colorObj.hex);
-        cell.onmouseover = () => (cell.style.transform = 'scale(1.1)');
-        cell.onmouseout = () => (cell.style.transform = 'scale(1.0)');
+    // color picker modal
+    function showColorModal(linkId){
+      pendingColorLinkId=linkId;
+      colorGrid.innerHTML='';
+      COLOR_PALETTE.forEach(c=>{
+        const cell=document.createElement('div');
+        cell.className='color-cell';
+        cell.style.backgroundColor=c.hex;
+        cell.style.width='50px'; cell.style.height='50px';
+        cell.style.borderRadius='4px'; cell.style.cursor='pointer';
+        cell.style.border='2px solid #1e1e1e';
+        cell.title=c.name;
+        cell.onclick=()=>selectColorForLink(c.hex);
+        cell.onmouseover=()=>cell.style.transform='scale(1.1)';
+        cell.onmouseout=()=>cell.style.transform='scale(1.0)';
         colorGrid.appendChild(cell);
       });
-      colorModal.style.display = 'flex';
+      colorModal.style.display='flex';
     }
-
-    function closeColorModal() {
-      colorModal.style.display = 'none';
-      pendingColorLinkId = null;
+    function closeColorModal(){ colorModal.style.display='none'; pendingColorLinkId=null; }
+    function selectColorForLink(hex){
+      const idx=links.findIndex(x=>x.id===pendingColorLinkId);
+      if(idx<0)return;
+      links[idx].color=hex; saveLinks(); renderLinks(); closeColorModal();
     }
+    window.addEventListener('click',e=>{ if(e.target===colorModal) closeColorModal(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&colorModal.style.display==='flex') closeColorModal(); });
 
-    function selectColorForLink(hex) {
-      const idx = links.findIndex(l => l.id === pendingColorLinkId);
-      if (idx === -1) return;
-      links[idx].color = hex;
-      saveLinks();
-      renderLinks();
-      closeColorModal();
+    // manage hidden passwords modal
+    managePasswordsBtn.onclick=()=>openManageModal();
+    function openManageModal(){
+      const sec=localStorage.getItem('hiddenPassword2');
+      setSecondaryDiv.classList.toggle('hidden',!!sec);
+      editSecondaryDiv.classList.toggle('hidden',!sec);
+      currentPrimaryEl.value=''; newPrimaryEl.value='';
+      newSecondaryEl.value=''; currentSecondaryEl.value='';
+      newSecondaryEditEl.value='';
+      manageModal.style.display='flex';
     }
-
-    window.addEventListener('click', e => {
-      if (e.target === colorModal) closeColorModal();
-    });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && colorModal.style.display === 'flex') {
-        closeColorModal();
-      }
-    });
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // MANAGE PASSWORDS MODAL (Hidden)
-    //───────────────────────────────────────────────────────────────────────────
-    managePasswordsBtn.onclick = () => openManageModal();
-
-    function openManageModal() {
-      const sec = localStorage.getItem('hiddenPassword2');
-      if (sec) {
-        setSecondaryDiv.classList.add('hidden');
-        editSecondaryDiv.classList.remove('hidden');
-      } else {
-        setSecondaryDiv.classList.remove('hidden');
-        editSecondaryDiv.classList.add('hidden');
-      }
-      currentPrimaryEl.value   = '';
-      newPrimaryEl.value       = '';
-      newSecondaryEl.value     = '';
-      currentSecondaryEl.value = '';
-      newSecondaryEditEl.value = '';
-      manageModal.style.display = 'flex';
-    }
-
-    function cancelManage() {
-      manageModal.style.display = 'none';
-    }
-
-    function handleChangePrimary() {
-      const cur = currentPrimaryEl.value.trim();
-      const nxt = newPrimaryEl.value.trim();
-      const stored1 = localStorage.getItem('hiddenPassword1');
-      if (!cur || !nxt) {
-        openInfoModal('Please fill both fields.');
-        return;
-      }
-      if (cur !== stored1) {
-        openInfoModal('Current primary password is incorrect.');
-        return;
-      }
-      if (nxt.length < 3) {
-        openInfoModal('New primary must be at least 3 characters.');
-        return;
-      }
-      localStorage.setItem('hiddenPassword1', nxt);
+    function cancelManage(){ manageModal.style.display='none'; }
+    function handleChangePrimary(){
+      const cur=currentPrimaryEl.value.trim();
+      const nxt=newPrimaryEl.value.trim();
+      const s1=localStorage.getItem('hiddenPassword1');
+      if(!cur||!nxt){ openInfoModal('Please fill both fields.'); return; }
+      if(cur!==s1){ openInfoModal('Current primary password is incorrect.'); return; }
+      if(nxt.length<3){ openInfoModal('New primary must be at least 3 characters.'); return; }
+      localStorage.setItem('hiddenPassword1',nxt);
       openInfoModal('Primary password changed successfully.');
       cancelManage();
     }
-
-    function handleSetSecondary() {
-      const nxt = newSecondaryEl.value.trim();
-      if (!nxt) {
-        openInfoModal('Please enter a secondary password.');
-        return;
-      }
-      localStorage.setItem('hiddenPassword2', nxt);
+    function handleSetSecondary(){
+      const nxt=newSecondaryEl.value.trim();
+      if(!nxt){ openInfoModal('Please enter a secondary password.'); return; }
+      localStorage.setItem('hiddenPassword2',nxt);
       openInfoModal('Secondary password set.');
       cancelManage();
     }
-
-    function handleChangeSecondary() {
-      const cur = currentSecondaryEl.value.trim();
-      const nxt = newSecondaryEditEl.value.trim();
-      const stored2 = localStorage.getItem('hiddenPassword2');
-      if (!cur || !nxt) {
-        openInfoModal('Please fill both fields.');
-        return;
-      }
-      if (cur !== stored2) {
-        openInfoModal('Current secondary password is incorrect.');
-        return;
-      }
-      localStorage.setItem('hiddenPassword2', nxt);
+    function handleChangeSecondary(){
+      const cur=currentSecondaryEl.value.trim();
+      const nxt=newSecondaryEditEl.value.trim();
+      const s2=localStorage.getItem('hiddenPassword2');
+      if(!cur||!nxt){ openInfoModal('Please fill both fields.'); return; }
+      if(cur!==s2){ openInfoModal('Current secondary password is incorrect.'); return; }
+      localStorage.setItem('hiddenPassword2',nxt);
       openInfoModal('Secondary password changed.');
       cancelManage();
     }
-
-    function handleDeleteSecondary() {
-      pendingDeleteFolderId = null; // not used here
-      openInfoModal('Secondary password deleted.', () => {
+    function handleDeleteSecondary(){
+      openInfoModal('Secondary password deleted.',()=>{
         localStorage.removeItem('hiddenPassword2');
       });
       cancelManage();
     }
+    window.addEventListener('click',e=>{ if(e.target===manageModal) cancelManage(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&manageModal.style.display==='flex') cancelManage(); });
 
-    window.addEventListener('click', e => {
-      if (e.target === manageModal) cancelManage();
-    });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && manageModal.style.display === 'flex') {
-        cancelManage();
-      }
-    });
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // FOLDER SETTINGS MODAL (user folders)
-    //───────────────────────────────────────────────────────────────────────────
-    folderSettingsBtn.onclick = () => openFolderSettings();
-
-    function openFolderSettings() {
-      folderNewPwdEl.value = '';
-      folderSettingsModal.style.display = 'flex';
+    // folder settings modal
+    folderSettingsBtn.onclick=()=>openFolderSettings();
+    function openFolderSettings(){
+      folderNewPwdEl.value=''; folderSettingsModal.style.display='flex';
     }
-
-    function cancelFolderSettings() {
-      folderSettingsModal.style.display = 'none';
-    }
-
-    function handleFolderPassword() {
-      const folderId = currentFolderId;
-      const val = folderNewPwdEl.value.trim();
-      if (val) {
-        localStorage.setItem(`folderPassword_${folderId}`, val);
+    function cancelFolderSettings(){ folderSettingsModal.style.display='none'; }
+    function handleFolderPassword(){
+      const fid = currentFolderId;
+      const v = folderNewPwdEl.value.trim();
+      if(v){
+        localStorage.setItem(`folderPassword_${fid}`,v);
         openInfoModal('Folder password saved.');
       } else {
-        localStorage.removeItem(`folderPassword_${folderId}`);
+        localStorage.removeItem(`folderPassword_${fid}`);
         openInfoModal('Folder password removed.');
       }
       cancelFolderSettings();
     }
-
-    function openFolderDeleteConfirmModal() {
-      const folder = folders.find(f => f.id === currentFolderId);
-      if (!folder) return;
-      pendingDeleteFolderId = currentFolderId;
-      folderDeleteConfirmText.textContent = `Are you sure you want to delete folder “${folder.name}” and all its links?`;
-      folderDeleteConfirmModal.style.display = 'flex';
+    function openFolderDeleteConfirmModal(){
+      const f=folders.find(x=>x.id===currentFolderId);
+      if(!f)return;
+      pendingDeleteFolderId=currentFolderId;
+      folderDeleteConfirmText.textContent=`Are you sure you want to delete folder “${f.name}” and all its links?`;
+      folderDeleteConfirmModal.style.display='flex';
     }
-
-    function cancelFolderDelete() {
-      folderDeleteConfirmModal.style.display = 'none';
-      pendingDeleteFolderId = null;
+    function cancelFolderDelete(){
+      folderDeleteConfirmModal.style.display='none';
+      pendingDeleteFolderId=null;
     }
-
-    function confirmFolderDelete() {
-      if (!pendingDeleteFolderId) {
-        cancelFolderDelete();
-        return;
-      }
-      const folder = folders.find(f => f.id === pendingDeleteFolderId);
-      if (!folder) {
-        cancelFolderDelete();
-        return;
-      }
-      // Perform deletion
-      folders = folders.filter(f => f.id !== pendingDeleteFolderId);
+    function confirmFolderDelete(){
+      if(!pendingDeleteFolderId){ cancelFolderDelete(); return; }
+      folders=folders.filter(x=>x.id!==pendingDeleteFolderId);
       saveFolders();
-      links = links.filter(l => l.folderId !== pendingDeleteFolderId);
+      links=links.filter(x=>x.folderId!==pendingDeleteFolderId);
       saveLinks();
       localStorage.removeItem(`folderPassword_${pendingDeleteFolderId}`);
-      // Switch to General
-      const gen = folders.find(f => !f.isHidden);
-      currentFolderId = gen.id;
+      const gen=folders.find(x=>!x.isHidden);
+      currentFolderId=gen.id;
       renderFolderList();
       openFolder(currentFolderId);
       cancelFolderDelete();
     }
-
-    window.addEventListener('click', e => {
-      if (e.target === folderSettingsModal) cancelFolderSettings();
-      if (e.target === folderDeleteConfirmModal) cancelFolderDelete();
+    window.addEventListener('click',e=>{
+      if(e.target===folderSettingsModal) cancelFolderSettings();
+      if(e.target===folderDeleteConfirmModal) cancelFolderDelete();
     });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        if (folderSettingsModal.style.display === 'flex') cancelFolderSettings();
-        if (folderDeleteConfirmModal.style.display === 'flex') cancelFolderDelete();
+    window.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){
+        if(folderSettingsModal.style.display==='flex') cancelFolderSettings();
+        if(folderDeleteConfirmModal.style.display==='flex') cancelFolderDelete();
       }
     });
 
-
-    //───────────────────────────────────────────────────────────────────────────
-    // INFO MODAL (for messages)
-    //───────────────────────────────────────────────────────────────────────────
-    let infoCallback = null;
-    function openInfoModal(message, callback = null) {
-      infoMessageEl.textContent = message;
-      infoCallback = callback;
-      infoModal.style.display = 'flex';
+    // info modal
+    let infoCallback=null;
+    function openInfoModal(msg, cb=null){
+      infoMessageEl.textContent=msg;
+      infoCallback=cb;
+      infoModal.style.display='flex';
     }
-
-    function closeInfoModal() {
-      infoModal.style.display = 'none';
-      if (typeof infoCallback === 'function') {
-        infoCallback();
-      }
-      infoCallback = null;
+    function closeInfoModal(){
+      infoModal.style.display='none';
+      if(typeof infoCallback==='function') infoCallback();
+      infoCallback=null;
     }
+    window.addEventListener('click',e=>{ if(e.target===infoModal) closeInfoModal(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&infoModal.style.display==='flex') closeInfoModal(); });
 
-    window.addEventListener('click', e => {
-      if (e.target === infoModal) closeInfoModal();
-    });
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && infoModal.style.display === 'flex') {
-        closeInfoModal();
-      }
-    });
-
-
-    //───────────────────────────────────────────────────────────────────────────
-    // INITIAL SETUP & ENTRY POINT
-    //───────────────────────────────────────────────────────────────────────────
-    function init() {
+    // init
+    function init(){
       loadData();
-      const gen = folders.find(f => !f.isHidden);
-      if (gen) currentFolderId = gen.id;
+      const gen=folders.find(x=>!x.isHidden);
+      if(gen) currentFolderId=gen.id;
       renderFolderList();
       openFolder(currentFolderId);
     }
-
     init();
-
   </script>
 </body>
 </html>
