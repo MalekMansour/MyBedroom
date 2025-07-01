@@ -147,7 +147,6 @@ body {
 }
 
 #linkList .link-item {
-  /* The background-color will be set inline via JS */
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 12px;
@@ -325,7 +324,6 @@ body {
   background-color: #444;
 }
 
-/* Delete‐style buttons red on hover */
 button.danger {
   background-color: #a00;
   color: #fff;
