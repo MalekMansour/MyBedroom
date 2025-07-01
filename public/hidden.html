@@ -62,14 +62,12 @@
     const hiddenLinksSection = document.getElementById('hiddenLinksSection');
     const linkList = document.getElementById('linkList');
 
-    // Determine which section to show
     if (!storedPassword) {
       setupPasswordSection.style.display = 'block';
     } else {
       loginSection.style.display = 'block';
     }
 
-    // Set a new password
     function setPassword() {
       const newPassword = document.getElementById('newPassword').value;
       if (newPassword.trim().length < 3) {
