@@ -247,7 +247,7 @@ body {
   border: 1px solid #333;
   border-radius: 5px;
   display: none;
-  z-index: 1500; /* higher so it sits on top */
+  z-index: 1500; 
   width: 180px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
