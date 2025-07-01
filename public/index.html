@@ -726,7 +726,6 @@
     window.addEventListener('click',e=>{ if(e.target===manageModal) cancelManage(); });
     window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&manageModal.style.display==='flex') cancelManage(); });
 
-    // folder settings modal
     folderSettingsBtn.onclick=()=>openFolderSettings();
     function openFolderSettings(){
       folderNewPwdEl.value=''; folderSettingsModal.style.display='flex';
