@@ -1,6 +1,6 @@
 # MyBedroom
 
-A client-side link manager that lets you organize, tag, filter, preview and secure your favorite websites in custom folders, all in a sleek dark-mode interface.
+A link manager that lets you organize, tag, filter and secure your favorite websites in custom folders, all in a sleek dark-mode interface.
 
 ---
 
