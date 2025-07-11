@@ -24,4 +24,4 @@ A client-side link manager that lets you organize, tag, filter, preview and secu
   - All confirmations & inputs use centered custom modals  
   - Dark, smooth, responsive UI with sidebar and context menus  
 
-X---
+---
