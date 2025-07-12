@@ -852,7 +852,6 @@
     window.addEventListener('click', e=>{ if(e.target===infoModal) closeInfoModal(); });
     window.addEventListener('keydown', e=>{ if(e.key==='Escape'&&infoModal.style.display==='flex') closeInfoModal(); });
 
-    // init
     function init() {
       loadData();
       const gen = folders.find(x=>!x.isHidden);
