@@ -230,20 +230,17 @@
   </div>
 
   <!-- Color Picker Modal -->
-  <div id="colorModal" class="modal">
-    <div class="modal-content">
-      <h2>Choose a Color Tag</h2>
-      <div class="color-grid" id="colorGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:10px 0;">
-        <!-- JS will inject the “clear” cell + the palette -->
-      </div>
-      <div class="modal-buttons">
-        <button onclick="clearColorTag()">Clear Color Tag</button>
-      </div>
-      <div class="modal-buttons">
-        <button onclick="closeColorModal()">Cancel</button>
-      </div>
+<div id="colorModal" class="modal">
+  <div class="modal-content">
+    <h2>Choose a Color Tag</h2>
+    <!-- 4×3 grid container, only the 12 real colors go here -->
+    <div class="color-grid" id="colorGrid"></div>
+    <div class="modal-buttons">
+      <button onclick="clearColorTag()">Clear Color Tag</button>
+      <button onclick="closeColorModal()">Cancel</button>
     </div>
   </div>
+</div>
 
   <!-- Manage Passwords Modal -->
   <div id="manageModal" class="modal">
