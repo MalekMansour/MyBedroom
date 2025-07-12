@@ -699,35 +699,24 @@
       if (e.key === 'Escape' && moveModal.style.display === 'flex') closeMoveModal();
     });
 
-    // color-picker modal
-    function showColorModal(linkId) {
-      pendingColorLinkId = linkId;
-      colorGrid.innerHTML = '';
+function showColorModal(linkId) {
+  pendingColorLinkId = linkId;
+  colorGrid.innerHTML = '';
 
-      // Clear-tag cell
-      const clearCell = document.createElement('div');
-      clearCell.className = 'color-cell clear-cell';
-      clearCell.textContent = '×';
-      clearCell.title = 'Clear color tag';
-      clearCell.onclick = () => selectColorForLink('');
-      clearCell.onmouseover = () => clearCell.style.transform = 'scale(1.1)';
-      clearCell.onmouseout  = () => clearCell.style.transform = 'scale(1.0)';
-      colorGrid.appendChild(clearCell);
+  COLOR_PALETTE.forEach(c => {
+    const cell = document.createElement('div');
+    cell.className = 'color-cell';
+    cell.style.backgroundColor = c.hex;
+    cell.title = c.name;
+    cell.onclick = () => selectColorForLink(c.hex);
+    cell.onmouseover = () => cell.style.transform = 'scale(1.1)';
+    cell.onmouseout  = () => cell.style.transform = 'scale(1.0)';
+    colorGrid.appendChild(cell);
+  });
 
-      // Palette
-      COLOR_PALETTE.forEach(c => {
-        const cell = document.createElement('div');
-        cell.className = 'color-cell';
-        cell.style.backgroundColor = c.hex;
-        cell.title = c.name;
-        cell.onclick = () => selectColorForLink(c.hex);
-        cell.onmouseover = () => cell.style.transform = 'scale(1.1)';
-        cell.onmouseout  = () => cell.style.transform = 'scale(1.0)';
-        colorGrid.appendChild(cell);
-      });
+  colorModal.style.display = 'flex';
+}
 
-      colorModal.style.display = 'flex';
-    }
     function clearColorTag() {
       selectColorForLink('');
     }
