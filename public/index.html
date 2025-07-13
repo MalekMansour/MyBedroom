@@ -355,7 +355,6 @@
       { name: 'Pumpkin', hex: '#E78B48' }, { name: 'Mustard', hex: '#EFB036' }
     ];
 
-    // DOM refs
     const folderListEl       = document.getElementById('folderList');
     const addFolderBtn       = document.getElementById('addFolderBtn');
     const folderTitleEl      = document.getElementById('folderTitle');
@@ -407,7 +406,6 @@
     const newFolderPrimaryPwd  = document.getElementById('newFolderPrimaryPwd');
     const newFolderSecondaryPwd= document.getElementById('newFolderSecondaryPwd');
 
-    // localStorage helpers
     function saveFolders() { localStorage.setItem('folders', JSON.stringify(folders)); }
     function saveLinks()   { localStorage.setItem('links',   JSON.stringify(links));   }
     function loadData() {
