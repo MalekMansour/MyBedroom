@@ -735,7 +735,6 @@
     window.addEventListener('click', e=>{ if(e.target===colorModal) closeColorModal(); });
     window.addEventListener('keydown', e=>{ if(e.key==='Escape'&&colorModal.style.display==='flex') closeColorModal(); });
 
-    // manage-hidden
     managePasswordsBtn.onclick=()=>openManageModal();
     function openManageModal(){
       const sec=localStorage.getItem('hiddenPassword2');
