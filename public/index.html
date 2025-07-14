@@ -709,7 +709,6 @@
     window.addEventListener('click', e=>{ if(e.target===moveModal) closeMoveModal(); });
     window.addEventListener('keydown', e=>{ if(e.key==='Escape'&&moveModal.style.display==='flex') closeMoveModal(); });
 
-    // color-picker
     function showColorModal(linkId){
       pendingColorLinkId=linkId;
       colorGrid.innerHTML='';
