@@ -527,7 +527,6 @@
       const v = pwdInput.value.trim();
       const fid = pendingMoveTargetFolderId;
 
-      // ---- Hidden folder logic ----
       if (passwordMode === 'setHiddenPrimary') {
         if (v.length < 3) { pwdError.textContent = 'At least 3 characters.'; return; }
         localStorage.setItem('hiddenPassword1', v);
