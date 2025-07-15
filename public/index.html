@@ -592,7 +592,6 @@
     window.addEventListener('click', e=>{ if(e.target===passwordModal) cancelPassword(); });
     window.addEventListener('keydown', e=>{ if(e.key==='Escape'&&passwordModal.style.display==='flex') cancelPassword(); });
 
-    // add links
     linkForm.onsubmit = e => {
       e.preventDefault();
       if (!currentFolderId) return;
