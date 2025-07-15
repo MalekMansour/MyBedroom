@@ -558,7 +558,6 @@
         return;
       }
 
-      // ---- User-folder logic ----
       if (passwordMode === 'setFolderPrimary') {
         if (v.length < 3) { pwdError.textContent = 'At least 3 characters.'; return; }
         localStorage.setItem(`folderPassword_${fid}`, v);
