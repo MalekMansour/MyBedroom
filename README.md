@@ -44,16 +44,6 @@ Life online moves fast—tabs pile up, bookmarks get lost in the shuffle, and se
 
 ---
 
-## Getting Started
-
-1. **Download or clone** this repository.  
-2. Open `index.html` in your browser (no build step required).  
-3. Your data is automatically saved to `localStorage`—no further setup needed.
-
-> To wrap as a standalone desktop app, drop the same files into any HTML-packaging workflow (Electron, Tauri, etc.) and point to `index.html`.
-
----
-
 ## Usage
 
 1. **Folders**  
